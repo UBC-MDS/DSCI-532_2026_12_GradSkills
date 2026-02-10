@@ -1,0 +1,10 @@
+name: graduate_skills
+channels:
+  - conda-forge
+dependencies:
+  - python
+  - altair
+  - pandas
+  - anywidget
+  - shiny
+  - shinywidgets
