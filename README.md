@@ -1,2 +1,6 @@
-# DSCI-532_2025_12_tbd
-532 Group 12 - TBD
+# Team 12 - Graduate Skills Dashboard
+
+- Wesley Beard
+- Harrison Li
+- Hector Palafox Prieto
+- Apoorva Srivastava
