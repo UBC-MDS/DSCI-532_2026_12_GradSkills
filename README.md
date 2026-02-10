@@ -8,3 +8,10 @@ location, university, and employment data in an accessible manner.
 It will contain several filters to allow the user to filter on location, degree level,
 and industry. In addition, the user will be able to visualize key employment KPIs such
 as employment rate and average starting salaries.
+
+## Contributors
+
+- Wesley Beard
+- Harrison Li
+- Hector Palafox Prieto
+- Apoorva Srivastava
