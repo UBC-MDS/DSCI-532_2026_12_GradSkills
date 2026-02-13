@@ -4,6 +4,7 @@ channels:
 dependencies:
   - python
   - altair
+  - jupyterlab
   - pandas
   - anywidget
   - shiny
