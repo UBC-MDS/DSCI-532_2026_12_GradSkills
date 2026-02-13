@@ -36,13 +36,19 @@ Ultimately, the goal is to empower users to make informed choices about educatio
 
 ## Section 3: Research Questions & Usage Scenarios
 
+### Research Questions
+
+- How do employment rates differ across degree levels within specific fields of study?
+- Which industries employ the largest share of graduates within a selected region and time frame?
+- How have starting salaries evolved over time across fields and regions? 
+
 ### Persona
 
-Emma, a 22-year old final-year undergraduate student in Engineering, is considering whether to pursue a Master's degree, and is evaluating job prospects across different regions and industries. Emma wants concrete, data=driven insights on employment rates and salary trends before making this decision.
+Emma is a 22-year old final-year undergraduate student in Engineering who is considering whether to pursue a Master's degree. She is evaluating job prospects across different regions and industries, and wants concrete, data=driven insights on employment rates and salary trends before making this decision.
 
 ### Usage Scenario
 
-Emma accesses the dashboard to explore employment outcomes for Engineering graduates. She filters the data by Region (North America), Field of Study (Engineering), and Graduation Year (2018-2025). The summary cards update to display 6-month and 12-month employment rates and average starting salary. She then examines the degree distribution chart to compare Bachelor's and Master's representation within her field. 
+Emma accesses the dashboard to explore employment outcomes for Engineering graduates. She filters the data by Region (North America), Field of Study (Engineering), and Graduation Year (2018-2025). The summary cards update to display 6-month and 12-month employment rates and average starting salary. She then examines the degree distribution chart to compare employment representation between Bachelor's and Master's graduates within her field. 
 
 Next, she explores the salary trend visualization to understand how starting salaries have evolved over time. She also reviews the Top Industries chart to identify which sectors most frequently employ Engineering graduates. By adjusting filters and comparing visual outputs, Emma is able to assess whether pursuing a Master's degree is likely to improve her employment prospects and earning potential. 
 
