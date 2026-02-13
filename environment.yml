@@ -4,6 +4,7 @@ channels:
 dependencies:
   - python
   - altair
+  - vl-convert-python
   - jupyterlab
   - pandas
   - anywidget
