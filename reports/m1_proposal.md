@@ -42,6 +42,10 @@ Emma, a 22-year old final-year undergraduate student in Engineering, is consider
 
 ### Usage Scenario
 
+Emma accesses the dashboard to explore employment outcomes for Engineering graduates. She filters the data by Region (North America), Field of Study (Engineering), and Graduation Year (2018-2025). The summary cards update to display 6-month and 12-month employment rates and average starting salary. She then examines the degree distribution chart to compare Bachelor's and Master's representation within her field. 
+
+Next, she explores the salary trend visualization to understand how starting salaries have evolved over time. She also reviews the Top Industries chart to identify which sectors most frequently employ Engineering graduates. By adjusting filters and comparing visual outputs, Emma is able to assess whether pursuing a Master's degree is likely to improve her employment prospects and earning potential. 
+
 ### User Stories
 
 **User Story 1:** As a prospective graduate student, I want to filter employment outcomes by degree level and field of study, so that I can compare whether pursuing a Master's degree improves employment rates and salary.
