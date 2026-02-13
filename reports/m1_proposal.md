@@ -13,22 +13,22 @@ We are building this dashboard for individuals who need to interpret graduate em
 - Career advisors guiding students using outcome-based evidence
 - University administrators assessing program performance
 
-Our role is to translate multi-dimensional employment data into an accessible and interactive visual tool.
+Our role is to translate multi-dimensional employment data into an accessible and interactive visual tool that supports clear comparison and informed decision-making. 
 
 ### Problem
 
-Graduate employment data is inherently multi-dimensional and difficult to interpret without structured exploration. Variables such as region, country, field of study, industry, degree level, graduation year, employment rates, and starting salary interact in complex ways. While the data contains valuable insights, users often struggle to answer practical questions such as:
+Graduate employment data is inherently multi-dimensional and difficult to interpret without structured exploration. Variables such as region, country, field of study, industry, degree level, graduation year, employment rates, and starting salary interact in complex ways across institutions and geographies. While the data contains valuable insights, users often struggle to answer practical questions such as:
 
 - Does pursuing a Master's degree significantly improve employment outcomes?
 - Which industries hire the largest share of graduates in a specific field of study?
 - How have starting salaries evolved over time?
 - Do certain universities consistently demonstrate stronger employment performance?
 
-Without interactive filtering and summarized metrics, extracting these insights requires time-consuming manual analysis and technical expertise that many users do not possess. 
+Without interactive filtering and summarized metrics, extracting these insights requires time-consuming manual analysis and technical expertise that many users do not possess, increasing the likelihood of decisions being made based on incomplete or misinterpreted information. 
 
 ### Solution
 
-To address this challenge, we propose an interactive dashboard that allows users to dynamically explore employment outcomes through intuitive visualizations and filters. Multi-select dropdowns (Region, Country, Field of Study, Industry) and a graduation year slider enable users to tailor the dataset to their needs. Summary metric cards provide high-level indicators such as 6-month and 12-month employment rates and starting salary statistics. Supporting visualizations, including degree distribution, top industries, top universities, and salary trends over time, enable a thorough comparative analysis.
+To address this challenge, we propose an interactive dashboard that allows users to dynamically explore employment outcomes through intuitive visualizations and filters. Multi-select dropdowns (Region, Country, Field of Study, Industry) and a graduation year slider enable users to tailor the dataset to their needs. Summary metric cards provide high-level indicators such as 6-month and 12-month employment rates and starting salary statistics. Supporting visualizations, including degree distribution, top industries, top universities, and salary trends over time, enable a thorough comparative analysis. Together, these features allow users to move seamlessly between high-level summaries and detailed comparisons, reducing cognitive overload and enabling evidence-based decision-making. 
 
 Ultimately, the goal is to empower users to make informed choices about education pathways, institutional performance, and career planning based on clear, accessible evidence.  
 
