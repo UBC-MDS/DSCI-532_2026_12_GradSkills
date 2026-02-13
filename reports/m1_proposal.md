@@ -17,6 +17,15 @@ Our role is to translate multi-dimensional employment data into an accessible an
 
 ### Problem
 
+Graduate employment data is inherently multi-dimensional and difficult to interpret without structured exploration. Variables such as region, country, field of study, industry, degree level, graduation year, employment rates, and starting salary interact in complex ways. While the data contains valuable insights, users often struggle to answer practical questions such as:
+
+- Does pursuing a Master's degree significantly improve employment outcomes?
+- Which industries hire the largest share of graduates in a specific field of study?
+- How have starting salaries evolved over time?
+- Do certain universities consistently demonstrate stronger employment performance?
+
+Without interactive filtering and summarized metrics, extracting these insights requires time-consuming manual analysis and technical expertise that many users do not possess. 
+
 ### Solution
 
 
