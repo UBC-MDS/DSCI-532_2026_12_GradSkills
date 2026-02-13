@@ -2,6 +2,24 @@
 
 ## Section 1: Motivation and Purpose
 
+**Our Role:** Data science consultants designing an interactive employment analytics dashboard.
+
+**Target Audience:** Prospective students, recent graduates, career advisors, and university administrators.
+
+We are building this dashboard for individuals who need to interpret graduate employment outcomes to support academic and career decision-making. These users include:
+
+- Prospective students deciding on a field of study or degree level
+- Recent graduates evaluating job market outcomes across industries and regions
+- Career advisors guiding students using outcome-based evidence
+- University administrators assessing program performance
+
+Our role is to translate multi-dimensional employment data into an accessible and interactive visual tool.
+
+### Problem
+
+### Solution
+
+
 ## Section 2: Description of the Data
 
 ## Section 3: Research Questions & Usage Scenarios
