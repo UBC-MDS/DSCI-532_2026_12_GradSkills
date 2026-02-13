@@ -24,6 +24,14 @@ Our role is to translate multi-dimensional employment data into an accessible an
 
 ## Section 3: Research Questions & Usage Scenarios
 
+### Persona
+
+Emma, a 22-year old final-year undergraduate student in Engineering, is considering whether to pursue a Master's degree, and is evaluating job prospects across different regions and industries. Emma wants concrete, data=driven insights on employment rates and salary trends before making this decision.
+
+### Usage Scenario
+
+### User Stories
+
 ## Section 4: Exploratory Data Analysis
 
 ## Section 5: App Sketch & Description
