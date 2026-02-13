@@ -44,7 +44,7 @@ Ultimately, the goal is to empower users to make informed choices about educatio
 
 ### Persona
 
-Emma is a 22-year old final-year undergraduate student in Engineering who is considering whether to pursue a Master's degree. She is evaluating job prospects across different regions and industries, and wants concrete, data=driven insights on employment rates and salary trends before making this decision.
+Emma is a 22-year-old final-year undergraduate student in Engineering who is considering whether to pursue a Master's degree. She is evaluating job prospects across different regions and industries, and wants concrete, data-driven insights on employment rates and salary trends before making this decision.
 
 ### Usage Scenario
 
