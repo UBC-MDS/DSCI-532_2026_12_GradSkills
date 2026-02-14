@@ -5,7 +5,7 @@ from shinywidgets import render_plotly, render_widget, output_widget
 
 # import altair as alt
 
-raw_data = pd.read_csv("data/raw/global_graduate_employability_index.csv")
+raw_data = pd.read_csv("data/processed/processed_data.csv")
 
 regions = sorted(raw_data["Region"].dropna().unique().tolist())
 studies = sorted(raw_data["Field_of_Study"].dropna().unique().tolist())
