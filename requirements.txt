@@ -1,0 +1,6 @@
+altair==6.0.0
+anywidget==0.9.21
+shiny==1.4.0
+shinywidgets==0.7.1
+pandas==3.0.1
+vl-convert-python==2.0.0rc1

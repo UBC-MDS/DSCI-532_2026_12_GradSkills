@@ -16,4 +16,4 @@ Diagram
 
 ## Calculation Details
 
-Descriptions
+Descriptions 
