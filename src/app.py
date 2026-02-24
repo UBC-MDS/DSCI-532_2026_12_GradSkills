@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import altair as alt
 from shiny import App, render, ui, reactive
-from shinywidgets import render_plotly, render_widget, output_widget
+from shinywidgets import render_altair, render_widget, output_widget
 
 raw_data = pd.read_csv("data/processed/processed_data.csv")
 
@@ -98,6 +98,7 @@ app_ui = ui.page_fluid(
                     output_widget("study_salary_plot"),
                     full_screen=True,
                 ),
+                width=1,
                 fill=True,
             ),
         ),
@@ -210,21 +211,19 @@ def server(input, output, session):
             .astype(int)
         )
 
-        top50 = pd.DataFrame(
+        top_uni = pd.DataFrame(
             uni_emp_summary.sort_values(
                 ["mean_overall", "University_Name"], ascending=[False, True]
-            )
-            .head(50)
-            .copy()
+            ).copy()
         )
 
-        ordered_unis = top50["University_Name"].tolist()
+        ordered_unis = top_uni["University_Name"].tolist()
 
-        top50 = top50.set_index(
+        top_uni = top_uni.set_index(
             "University_Name"
         ).reindex(ordered_unis).reset_index()
 
-        table_display = top50[
+        table_display = top_uni[
             ["University_Name", "rank", "mean_overall"]
         ].copy()
         table_display.columns = ["Name", "Rank", "Mean Employment Rate (%)"]
@@ -233,6 +232,55 @@ def server(input, output, session):
         ].round(1)
 
         return render.DataGrid(table_display, selection_mode="rows")
+
+    @render_altair
+    def industries_bar():
+        data = filtered_data()
+        if data.empty:
+            return alt.Chart(pd.DataFrame()).mark_text().encode(
+                text=alt.value("No data")
+            )
+
+        industry_salary = (
+            data.groupby("Top_Industry", as_index=False)
+                .agg(avg_salary=("Average_Starting_Salary_USD", "mean"))
+        )
+
+        industry_salary["rank"] = (
+            industry_salary["avg_salary"].rank(
+                method="dense", ascending=False
+            ).astype(int)
+        )
+
+        top_industries = (
+            industry_salary.sort_values("avg_salary", ascending=False).copy()
+        )
+
+        industries_bar = (
+            alt.Chart(top_industries)
+            .mark_bar()
+            .encode(
+                y=alt.Y("Top_Industry:N", sort=None, title="Top Industry"),
+                x=alt.X(
+                    "avg_salary:Q",
+                    title="Average Starting Salary (USD)",
+                    axis=alt.Axis(format="$,.0f"),
+                ),
+                tooltip=[
+                    alt.Tooltip("rank:Q", title="Rank"),
+                    alt.Tooltip("Top_Industry:N", title="Industry"),
+                    alt.Tooltip("avg_salary:Q", title="Avg Salary (USD)", 
+                                format="$,.2f"),
+                ],
+            )
+            .properties(
+                width="container",
+                height=300,
+                title="Top Industries by Average Starting Salary"
+            )
+        )
+        
+        return industries_bar
 
 
 app = App(app_ui, server)
