@@ -189,10 +189,6 @@ def server(input, output, session):
     @render.data_frame
     def university_table():
         data = filtered_data()
-        if data.empty:
-            return render.DataGrid(
-                pd.DataFrame(columns=["Name", "Rank", "Mean Employment Rate (%)"])
-            )
 
         uni_emp_summary: pd.DataFrame = data.groupby(
             ["University_Name", "Region", "Country"], as_index=False
@@ -219,13 +215,11 @@ def server(input, output, session):
 
         ordered_unis = top_uni["University_Name"].tolist()
 
-        top_uni = top_uni.set_index(
-            "University_Name"
-        ).reindex(ordered_unis).reset_index()
+        top_uni = (
+            top_uni.set_index("University_Name").reindex(ordered_unis).reset_index()
+        )
 
-        table_display = top_uni[
-            ["University_Name", "rank", "mean_overall"]
-        ].copy()
+        table_display = top_uni[["University_Name", "rank", "mean_overall"]].copy()
         table_display.columns = ["Name", "Rank", "Mean Employment Rate (%)"]
         table_display["Mean Employment Rate (%)"] = table_display[
             "Mean Employment Rate (%)"
@@ -236,25 +230,20 @@ def server(input, output, session):
     @render_altair
     def industries_bar():
         data = filtered_data()
-        if data.empty:
-            return alt.Chart(pd.DataFrame()).mark_text().encode(
-                text=alt.value("No data")
-            )
 
-        industry_salary = (
-            data.groupby("Top_Industry", as_index=False)
-                .agg(avg_salary=("Average_Starting_Salary_USD", "mean"))
+        industry_salary = data.groupby("Top_Industry", as_index=False).agg(
+            avg_salary=("Average_Starting_Salary_USD", "mean")
         )
 
         industry_salary["rank"] = (
-            industry_salary["avg_salary"].rank(
-                method="dense", ascending=False
-            ).astype(int)
+            industry_salary["avg_salary"]
+            .rank(method="dense", ascending=False)
+            .astype(int)
         )
 
-        top_industries = (
-            industry_salary.sort_values("avg_salary", ascending=False).copy()
-        )
+        top_industries = industry_salary.sort_values(
+            "avg_salary", ascending=False
+        ).copy()
 
         industries_bar = (
             alt.Chart(top_industries)
@@ -269,18 +258,61 @@ def server(input, output, session):
                 tooltip=[
                     alt.Tooltip("rank:Q", title="Rank"),
                     alt.Tooltip("Top_Industry:N", title="Industry"),
-                    alt.Tooltip("avg_salary:Q", title="Avg Salary (USD)", 
-                                format="$,.2f"),
+                    alt.Tooltip(
+                        "avg_salary:Q", title="Avg Salary (USD)", format="$,.2f"
+                    ),
                 ],
             )
             .properties(
-                width="container",
-                height=300,
-                title="Top Industries by Average Starting Salary"
+                width=500, height=300,
+                title="Top Industries by Average Starting Salary",
             )
         )
-        
+
         return industries_bar
+
+    @render_altair
+    def study_salary_plot():
+        data = filtered_data()
+
+        salary_over_time = data.groupby(
+            ["Graduation_Year", "Field_of_Study"], as_index=False
+        ).agg(avg_salary=("Average_Starting_Salary_USD", "mean"))
+
+        highlight = alt.selection_point(
+            fields=["Field_of_Study"], bind="legend"
+        )
+
+        line_chart = (
+            alt.Chart(salary_over_time)
+            .mark_line(point=True)
+            .encode(
+                x=alt.X("Graduation_Year:O", title="Year", sort="ascending"),
+                y=alt.Y(
+                    "avg_salary:Q",
+                    title="Average Starting Salary (USD)",
+                    axis=alt.Axis(format="$,.0f"),
+                    scale=alt.Scale(domain=[40000, 100000]),
+                ),
+                color=alt.Color("Field_of_Study:N", title="Field of Study"),
+                opacity=alt.condition(highlight, alt.value(1), alt.value(0.12)),
+                tooltip=[
+                    alt.Tooltip("Graduation_Year:O", title="Year"),
+                    alt.Tooltip("Field_of_Study:N", title="Field of Study"),
+                    alt.Tooltip(
+                        "avg_salary:Q", title="Avg Salary (USD)", 
+                        format="$,.2f"
+                    ),
+                ],
+            )
+            .add_params(highlight)
+            .properties(
+                width=500, height=300,
+                title="Average Starting Salary Over Time"
+            )
+        )
+
+        return line_chart
 
 
 app = App(app_ui, server)
