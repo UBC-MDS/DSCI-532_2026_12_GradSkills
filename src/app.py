@@ -2,15 +2,13 @@ import numpy as np
 import pandas as pd
 from shiny import App, render, ui, reactive
 from shinywidgets import render_plotly, render_widget, output_widget
-
-# import altair as alt
+import altair as alt
 
 raw_data = pd.read_csv("data/processed/processed_data.csv")
 
 regions = sorted(raw_data["Region"].dropna().unique().tolist())
 studies = sorted(raw_data["Field_of_Study"].dropna().unique().tolist())
 industries = sorted(raw_data["Top_Industry"].dropna().unique().tolist())
-
 
 app_ui = ui.page_fluid(
     ui.panel_title("Graduate Skills Employability Dashboard"), 
@@ -58,9 +56,9 @@ app_ui = ui.page_fluid(
             ),
         ),
         ui.layout_columns(
-            ui.value_box("Employment Rate 6 Month", ui.output_text("emp_rate_6")),
-            ui.value_box("Employment Rate 12 Month", ui.output_text("emp_rate_12")),
-            ui.value_box("Starting Salary", ui.output_text("starting_salary")),
+            ui.value_box("Employment Rate 6 Month", ui.output_ui("emp_rate_6")),
+            ui.value_box("Employment Rate 12 Month", ui.output_ui("emp_rate_12")),
+            ui.value_box("Starting Salary", ui.output_ui("starting_salary")),
             fill=False
         ),
         ui.layout_columns(
@@ -110,26 +108,47 @@ def server(input, output, session):
 
         return df[idx0 & idx1 & idx2 & idx3 & idx4]
 
-    @render.text
+    @render.ui
     def emp_rate_6():
         col = filtered_data()["Employment_Rate_6_Months (%)"]
-        return "Max: {:.1f}%\nMin: {:.1f}%\nAverage: {:.1f}%".format(
-            col.max(), col.min(), col.mean()
-        )
+        return ui.HTML("""
+                       <div style="font-size: 16pt;line-height:1.5;">
+                       Q1: {:.1f}%<br/>
+                       median: {:.1f}%<br/>
+                       Q3: {:.1f}%<br/>
+                       mean: {:.1f}%
+                       </div>
+                       """.format(
+            col.quantile(0.25), col.median(), col.quantile(0.75), col.mean()
+        ))
     
-    @render.text
+    @render.ui
     def emp_rate_12():
         col = filtered_data()["Employment_Rate_12_Months (%)"]
-        return "Max: {:.1f}%\nMin: {:.1f}%\nAverage: {:.1f}%".format(
-            col.max(), col.min(), col.mean()
-        )
+        return ui.HTML("""
+                       <div style="font-size: 16pt;line-height:1.5;">
+                       Q1: {:.1f}%<br/>
+                       median: {:.1f}%<br/>
+                       Q3: {:.1f}%<br/>
+                       mean: {:.1f}%
+                       </div>
+                       """.format(
+            col.quantile(0.25), col.median(), col.quantile(0.75), col.mean()
+        ))
     
-    @render.text
+    @render.ui
     def starting_salary():
         col = filtered_data()["Average_Starting_Salary_USD"]
-        return "Max: {}\nMin: {}\nAverage: {:.0f}".format(
-            col.max(), col.min(), col.mean()
-        )
+        return ui.HTML("""
+                       <div style="font-size: 16pt; line-height:1.5;">
+                       Q1: {:.1f}<br/>
+                       median: {:.1f}<br/>
+                       Q3: {:.1f}<br/>
+                       mean: {:.1f}
+                       </div>
+                       """.format(
+            col.quantile(0.25), col.median(), col.quantile(0.75), col.mean()
+        ))
 
     @reactive.effect
     @reactive.event(input.region)
