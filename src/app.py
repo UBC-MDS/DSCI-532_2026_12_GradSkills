@@ -63,28 +63,24 @@ app_ui = ui.page_fluid(
         ),
         ui.layout_columns(
             ui.card(
-                ui.card_header("Degrees"), 
-                output_widget("degrees_pie"), 
-                full_screen=True
-            ), 
-            ui.card(
-                ui.card_header("Industries"), 
-                output_widget("industries_bar"), 
-                full_screen=True
-            ), 
-        ), 
-        ui.layout_columns(
-            ui.card(
                 ui.card_header("Top Universities"), 
                 output_widget("universities_bar"), 
-                full_screen=True
+                full_screen=True,
             ), 
-            ui.card(
-                ui.card_header("Yearly Starting Salary for each Field of Study"), 
-                output_widget("study_salary_plot"), 
-                full_screen=True
-            ), 
-        )
+            ui.layout_column_wrap(
+                ui.card(
+                    ui.card_header("Industries"), 
+                    output_widget("industries_bar"), 
+                    full_screen=True
+                ), 
+                ui.card(
+                    ui.card_header("Yearly Starting Salary for each Field of Study"), 
+                    output_widget("study_salary_plot"), 
+                    full_screen=True
+                ),
+                fill=True
+            ),
+        ),
     ),
 )
 
