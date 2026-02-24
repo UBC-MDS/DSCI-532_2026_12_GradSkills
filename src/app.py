@@ -186,8 +186,8 @@ def server(input, output, session):
             selected=countries,  # select all in these regions
         )
 
-    @render.data_frame
-    def university_table():
+    @reactive.calc
+    def top_uni():
         data = filtered_data()
 
         uni_emp_summary: pd.DataFrame = data.groupby(
@@ -218,8 +218,21 @@ def server(input, output, session):
         top_uni = (
             top_uni.set_index("University_Name").reindex(ordered_unis).reset_index()
         )
+        return top_uni
+    
+    @reactive.calc
+    def filter_data_by_university():
+        data = filtered_data()
+        university_idx = list(input.university_table_selected_rows())
+        if not university_idx:
+            return data
+        selected_universities = top_uni().iloc[university_idx]["University_Name"].tolist()
+        # print(selected_universities)
+        return data[data["University_Name"].isin(selected_universities)]
 
-        table_display = top_uni[["University_Name", "rank", "mean_overall"]].copy()
+    @render.data_frame
+    def university_table():
+        table_display = top_uni()[["University_Name", "rank", "mean_overall"]].copy()
         table_display.columns = ["Name", "Rank", "Mean Employment Rate (%)"]
         table_display["Mean Employment Rate (%)"] = table_display[
             "Mean Employment Rate (%)"
@@ -229,7 +242,7 @@ def server(input, output, session):
 
     @render_altair
     def industries_bar():
-        data = filtered_data()
+        data = filter_data_by_university()
 
         industry_salary = data.groupby("Top_Industry", as_index=False).agg(
             avg_salary=("Average_Starting_Salary_USD", "mean")
@@ -264,7 +277,7 @@ def server(input, output, session):
                 ],
             )
             .properties(
-                width=500, height=300,
+                width="container", height="container",
                 title="Top Industries by Average Starting Salary",
             )
         )
@@ -273,7 +286,7 @@ def server(input, output, session):
 
     @render_altair
     def study_salary_plot():
-        data = filtered_data()
+        data = filter_data_by_university()
 
         salary_over_time = data.groupby(
             ["Graduation_Year", "Field_of_Study"], as_index=False
@@ -282,6 +295,8 @@ def server(input, output, session):
         highlight = alt.selection_point(
             fields=["Field_of_Study"], bind="legend"
         )
+
+        ymin, ymax = data['Average_Starting_Salary_USD'].min() * 0.9, data['Average_Starting_Salary_USD'].max() * 1.1
 
         line_chart = (
             alt.Chart(salary_over_time)
@@ -292,7 +307,7 @@ def server(input, output, session):
                     "avg_salary:Q",
                     title="Average Starting Salary (USD)",
                     axis=alt.Axis(format="$,.0f"),
-                    scale=alt.Scale(domain=[40000, 100000]),
+                    scale=alt.Scale(domain=[ymin, ymax]),
                 ),
                 color=alt.Color("Field_of_Study:N", title="Field of Study"),
                 opacity=alt.condition(highlight, alt.value(1), alt.value(0.12)),
@@ -307,7 +322,7 @@ def server(input, output, session):
             )
             .add_params(highlight)
             .properties(
-                width=500, height=300,
+                width="container", height="container",
                 title="Average Starting Salary Over Time"
             )
         )
