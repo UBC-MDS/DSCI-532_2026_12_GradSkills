@@ -74,6 +74,7 @@ app_ui = ui.page_fluid(
                 ticks=True,
                 animate=True,
             ),
+            ui.input_action_button("reset_btn", "Reset Filters"),
         ),
         ui.layout_columns(
             ui.value_box("Employment Rate 6 Month", ui.output_ui("emp_rate_6")),
@@ -108,6 +109,20 @@ app_ui = ui.page_fluid(
 
 def server(input, output, session):
 
+    @reactive.effect
+    @reactive.event(input.reset_btn)
+    def _reset_filters():
+        ui.update_slider(
+            "grad_year",
+            value=[
+                int(raw_data["Graduation_Year"].min()),
+                int(raw_data["Graduation_Year"].max()),
+            ],
+        )
+        ui.update_checkbox_group("region", choices=regions, selected=regions)
+        ui.update_checkbox_group("study", choices=studies, selected=studies)
+        ui.update_checkbox_group("industry", choices=industries, selected=industries)
+
     @reactive.calc
     def filtered_data():
         df = raw_data.copy()
@@ -130,13 +145,13 @@ def server(input, output, session):
         col = filtered_data()["Employment_Rate_6_Months (%)"]
         return ui.HTML(
             """
-                       <div style="font-size: 16pt;line-height:1.5;">
-                       Q1: {:.1f}%<br/>
-                       median: {:.1f}%<br/>
-                       Q3: {:.1f}%<br/>
-                       mean: {:.1f}%
-                       </div>
-                       """.format(
+            <div style="font-size: 16pt;line-height:1.5;">
+            Q1: {:.1f}%<br/>
+            median: {:.1f}%<br/>
+            Q3: {:.1f}%<br/>
+            mean: {:.1f}%
+            </div>
+            """.format(
                 col.quantile(0.25), col.median(), col.quantile(0.75), col.mean()
             )
         )
@@ -146,13 +161,13 @@ def server(input, output, session):
         col = filtered_data()["Employment_Rate_12_Months (%)"]
         return ui.HTML(
             """
-                       <div style="font-size: 16pt;line-height:1.5;">
-                       Q1: {:.1f}%<br/>
-                       median: {:.1f}%<br/>
-                       Q3: {:.1f}%<br/>
-                       mean: {:.1f}%
-                       </div>
-                       """.format(
+            <div style="font-size: 16pt;line-height:1.5;">
+            Q1: {:.1f}%<br/>
+            median: {:.1f}%<br/>
+            Q3: {:.1f}%<br/>
+            mean: {:.1f}%
+            </div>
+            """.format(
                 col.quantile(0.25), col.median(), col.quantile(0.75), col.mean()
             )
         )
@@ -162,19 +177,19 @@ def server(input, output, session):
         col = filtered_data()["Average_Starting_Salary_USD"]
         return ui.HTML(
             """
-                       <div style="font-size: 16pt; line-height:1.5;">
-                       Q1: {:.1f}<br/>
-                       median: {:.1f}<br/>
-                       Q3: {:.1f}<br/>
-                       mean: {:.1f}
-                       </div>
-                       """.format(
+            <div style="font-size: 16pt; line-height:1.5;">
+            Q1: {:.1f}<br/>
+            median: {:.1f}<br/>
+            Q3: {:.1f}<br/>
+            mean: {:.1f}
+            </div>
+            """.format(
                 col.quantile(0.25), col.median(), col.quantile(0.75), col.mean()
             )
         )
 
     @reactive.effect
-    @reactive.event(input.region)
+    @reactive.event(input.region, input.reset_btn)
     def update_countries_by_region():
         filtered_by_region = raw_data[raw_data["Region"].isin(input.region())]
 
@@ -219,14 +234,16 @@ def server(input, output, session):
             top_uni.set_index("University_Name").reindex(ordered_unis).reset_index()
         )
         return top_uni
-    
+
     @reactive.calc
     def filter_data_by_university():
         data = filtered_data()
         university_idx = list(input.university_table_selected_rows())
         if not university_idx:
             return data
-        selected_universities = top_uni().iloc[university_idx]["University_Name"].tolist()
+        selected_universities = (
+            top_uni().iloc[university_idx]["University_Name"].tolist()
+        )
         # print(selected_universities)
         return data[data["University_Name"].isin(selected_universities)]
 
@@ -268,6 +285,7 @@ def server(input, output, session):
                     title="Average Starting Salary (USD)",
                     axis=alt.Axis(format="$,.0f"),
                 ),
+                color=alt.Color("Top_Industry:N", title="Industry"),
                 tooltip=[
                     alt.Tooltip("rank:Q", title="Rank"),
                     alt.Tooltip("Top_Industry:N", title="Industry"),
@@ -277,7 +295,8 @@ def server(input, output, session):
                 ],
             )
             .properties(
-                width="container", height="container",
+                width="container",
+                height="container",
                 title="Top Industries by Average Starting Salary",
             )
         )
@@ -292,11 +311,15 @@ def server(input, output, session):
             ["Graduation_Year", "Field_of_Study"], as_index=False
         ).agg(avg_salary=("Average_Starting_Salary_USD", "mean"))
 
-        highlight = alt.selection_point(
-            fields=["Field_of_Study"], bind="legend"
-        )
+        highlight = alt.selection_point(fields=["Field_of_Study"], bind="legend")
 
-        ymin, ymax = data['Average_Starting_Salary_USD'].min() * 0.9, data['Average_Starting_Salary_USD'].max() * 1.1
+        if input.university_table_selected_rows():
+            ymin, ymax = (
+                data["Average_Starting_Salary_USD"].min() * 0.95,
+                data["Average_Starting_Salary_USD"].max() * 1.05,
+            )
+        else:
+            ymin, ymax = 4e4, 1e5
 
         line_chart = (
             alt.Chart(salary_over_time)
@@ -315,15 +338,15 @@ def server(input, output, session):
                     alt.Tooltip("Graduation_Year:O", title="Year"),
                     alt.Tooltip("Field_of_Study:N", title="Field of Study"),
                     alt.Tooltip(
-                        "avg_salary:Q", title="Avg Salary (USD)", 
-                        format="$,.2f"
+                        "avg_salary:Q", title="Avg Salary (USD)", format="$,.2f"
                     ),
                 ],
             )
             .add_params(highlight)
             .properties(
-                width="container", height="container",
-                title="Average Starting Salary Over Time"
+                width="container",
+                height="container",
+                title="Average Starting Salary Over Time",
             )
         )
 
