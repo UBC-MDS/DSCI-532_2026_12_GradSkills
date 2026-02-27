@@ -4,7 +4,13 @@ Here are the dashboard specs for M2:
 
 ## Job Stories
 
-Table
+| #   | Job Story                       | Status         | Notes                         |
+| --- | ------------------------------- | -------------- | ----------------------------- |
+| 1   | As a prospective graduate student, I want to filter employment outcomes by degree level and field of study, so that I can compare whether pursuing a Master's degree improves employment rates and salary.|  |                               |
+| 2   | As a student exploring job opportunities, I want to compare top industries in my field so that I can target high-demand sectors.|       |  |
+| 3   | As a career advisor, I want to visualize employment rates at both 6 and 12 months so that I can evaluate short-term versus longer-term employment stability for graduates.|   | 
+| 4   | As a university administrator, I want to view top-performing universities under specific filters so that I can benchmark institutional performance.|   |                               |
+
 
 ## Component Inventory
 
