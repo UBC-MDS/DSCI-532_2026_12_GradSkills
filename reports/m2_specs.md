@@ -58,4 +58,20 @@ flowchart TD
 
 ## Calculation Details
 
-Descriptions 
+### `filtered_data`
+
+- Depends on: 
+- Transformations:
+- Consumed by:
+
+### `top_uni`
+
+- Depends on: 
+- Transformations:
+- Consumed by:
+
+### `filter_data_by_university`
+
+- Depends on: 
+- Transformations:
+- Consumed by:
