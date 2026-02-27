@@ -71,7 +71,13 @@ flowchart TD
 
 **Transformations performed:**
 
-**Consumed by:**
+**Outputs that consume it:**
+
+- `emp_rate_6`
+- `emp_rate_12`
+- `starting_salary`
+- `top_uni`
+- `filter_data_by_university`
 
 ### `top_uni`
 
@@ -81,7 +87,10 @@ flowchart TD
 
 **Transformations performed:**
 
-**Consumed by:**
+**Outputs that consume it:**
+
+- `university_table`
+- `filter_data_by_university`
 
 ### `filter_data_by_university`
 
@@ -93,4 +102,7 @@ flowchart TD
 
 **Transformations performed:**
 
-**Consumed by:**
+**Outputs that consume it:**
+
+- `industries_bar`
+- `study_salary_plot`
