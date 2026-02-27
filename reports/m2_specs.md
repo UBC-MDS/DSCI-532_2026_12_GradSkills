@@ -60,18 +60,37 @@ flowchart TD
 
 ### `filtered_data`
 
-- Depends on: 
-- Transformations:
-- Consumed by:
+**Depends on:**
+
+- `region`
+- `country`
+- `study`
+- `degree_level`
+- `industry`
+- `grad_year`
+
+**Transformations performed:**
+
+**Consumed by:**
 
 ### `top_uni`
 
-- Depends on: 
-- Transformations:
-- Consumed by:
+**Depends on:**
+
+- `filtered_data`
+
+**Transformations performed:**
+
+**Consumed by:**
 
 ### `filter_data_by_university`
 
-- Depends on: 
-- Transformations:
-- Consumed by:
+**Depends on:**
+
+- `filtered_data`
+- `top_uni`
+- `university_table_selected_rows`
+
+**Transformations performed:**
+
+**Consumed by:**
