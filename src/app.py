@@ -125,6 +125,7 @@ def server(input, output, session):
 
     @reactive.calc
     def filtered_data():
+        _ = input.reset_btn()
         df = raw_data.copy()
 
         # filters
