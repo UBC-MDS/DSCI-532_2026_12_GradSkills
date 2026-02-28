@@ -17,41 +17,44 @@ def render_cards_with_format(size, avg, q1, median, q3, unit_prefix="", unit_suf
     I did the HTML with ChatGPT because I do not have the time to
     learn how to centre divs.
     """
-    return (
-        f"""
-            
-            <div style="width: 100%; text-align: center;">
 
-                <div style="font-size: {size}pt; margin-bottom: 6px;">
-                    <br/>Average
-                </div>
+    def fmt(x):
+        if pd.isna(x):
+            return "-"
+        return f"{unit_prefix}{x:.1f}{unit_suffix}"
 
-                <div style="font-size: {size * 2}pt; font-weight: 700; line-height: 1.1; margin-bottom: 24px;">
-                    {unit_prefix}{avg:.1f}{unit_suffix}
-                </div>
+    return f"""
+        <div style="width: 100%; text-align: center;">
 
-                <div style="
-                    display: grid;
-                    grid-template-columns: auto auto;
-                    justify-content: center;
-                    column-gap: 18px;
-                    row-gap: 6px;
-                    font-size: {int(size * 0.8)}pt;
-                    line-height: 1.4;
-                ">
-                    <div style="text-align: right;">Q1:</div>
-                    <div style="font-weight: 700; text-align: left;">{unit_prefix}{q1:.1f}{unit_suffix}</div>
-
-                    <div style="text-align: right;">Median:</div>
-                    <div style="font-weight: 700; text-align: left;">{unit_prefix}{median:.1f}{unit_suffix}</div>
-
-                    <div style="text-align: right;">Q3:</div>
-                    <div style="font-weight: 700; text-align: left;">{unit_prefix}{q3:.1f}{unit_suffix}</div>
-                </div>
-
+            <div style="font-size: {size}pt; margin-bottom: 6px;">
+                <br/>Average
             </div>
-        """
-    )
+
+            <div style="font-size: {size * 2}pt; font-weight: 700; line-height: 1.1; margin-bottom: 24px;">
+                {fmt(avg)}
+            </div>
+
+            <div style="
+                display: grid;
+                grid-template-columns: auto auto;
+                justify-content: center;
+                column-gap: 18px;
+                row-gap: 6px;
+                font-size: {int(size * 0.8)}pt;
+                line-height: 1.4;
+            ">
+                <div style="text-align: right;">Q1:</div>
+                <div style="font-weight: 700; text-align: left;">{fmt(q1)}</div>
+
+                <div style="text-align: right;">Median:</div>
+                <div style="font-weight: 700; text-align: left;">{fmt(median)}</div>
+
+                <div style="text-align: right;">Q3:</div>
+                <div style="font-weight: 700; text-align: left;">{fmt(q3)}</div>
+            </div>
+
+        </div>
+    """
 
 app_ui = ui.page_fluid(
     ui.panel_title("Graduate Skills Employability Dashboard"),
@@ -212,9 +215,14 @@ def server(input, output, session):
 
     @render.ui
     def emp_rate_6():
-        col = display_data()["Employment_Rate_6_Months (%)"]
+        col = filter_data_by_university()["Employment_Rate_6_Months (%)"]
 
-        size = 14   
+        size = 14
+
+        if col.empty:
+            return ui.HTML(
+                render_cards_with_format(size, np.nan, np.nan, np.nan, np.nan, unit_suffix="%")
+            )  
 
         q1 = col.quantile(0.25)
         median = col.median()
@@ -229,9 +237,14 @@ def server(input, output, session):
 
     @render.ui
     def emp_rate_12():
-        col = display_data()["Employment_Rate_12_Months (%)"]
+        col = filter_data_by_university()["Employment_Rate_12_Months (%)"]
 
         size = 14
+
+        if col.empty:
+            return ui.HTML(
+                render_cards_with_format(size, np.nan, np.nan, np.nan, np.nan, unit_suffix="%")
+            )
 
         q1 = col.quantile(0.25)
         median = col.median()
@@ -246,9 +259,16 @@ def server(input, output, session):
 
     @render.ui
     def starting_salary():
-        col = display_data()["Average_Starting_Salary_USD"]
+        col = filter_data_by_university()["Average_Starting_Salary_USD"]
 
         size = 14
+
+        if col.empty:
+            return ui.HTML(
+                render_cards_with_format(size, np.nan, np.nan, np.nan, np.nan, unit_suffix="%")
+            )
+
+        
 
         q1 = col.quantile(0.25) / 1000
         median = col.median() / 1000
