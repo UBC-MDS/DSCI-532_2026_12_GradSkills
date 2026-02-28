@@ -174,6 +174,11 @@ app_ui = ui.page_fluid(
             ),
         ),
     ),
+    ui.hr(),
+    ui.p(
+        "Graduate employability dashboard | Authors: Wesley Beard, Harrison Li, Hector Palafox Prieto, Apoorva Srivastava | Repository: https://github.com/UBC-MDS/DSCI-532_2026_12_GradSkills | Last updated: 2026-02-28",
+        class_="text-center text-muted",
+    )
 )
 
 
@@ -265,7 +270,7 @@ def server(input, output, session):
 
         if col.empty:
             return ui.HTML(
-                render_cards_with_format(size, np.nan, np.nan, np.nan, np.nan, unit_suffix="%")
+                render_cards_with_format(size, np.nan, np.nan, np.nan, np.nan, unit_prefix="$", unit_suffix="K")
             )
 
         
