@@ -39,12 +39,12 @@ Here are the dashboard specs for M2:
 
 ```mermaid
 flowchart TD
-  region[/region/] & country[/country/] & study[/study/] & industry[/industry/] & grad_year[/grad_year/] --> filtered_data{{filtered_data}}
+  region[/region/] & country[/country/] & study[/study/] & degree_level[/degree_level/] & industry[/industry/] & grad_year[/grad_year/] --> filtered_data{{filtered_data}}
 
   reset_btn[/reset_btn/] --> _reset_filters{{_reset_filters}}
   reset_btn[/reset_btn/] --> update_countries_by_region{{update_countries_by_region}}
   region[/region/] --> update_countries_by_region
-  _reset_filters --> region & study & industry & grad_year
+  _reset_filters --> region & study & industry & grad_year & degree_level
   update_countries_by_region --> country
 
   filtered_data --> emp_rate_6([emp_rate_6]) & emp_rate_12([emp_rate_12]) & starting_salary([starting_salary]) & top_uni{{top_uni}}
