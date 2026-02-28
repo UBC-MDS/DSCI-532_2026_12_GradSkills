@@ -1,7 +1,8 @@
+
 import numpy as np
 import pandas as pd
 import altair as alt
-from shiny import App, render, ui, reactive
+from shiny import App, render, ui, reactive, req
 from shinywidgets import render_altair, render_widget, output_widget
 
 raw_data = pd.read_csv("data/processed/processed_data.csv")
@@ -9,6 +10,52 @@ raw_data = pd.read_csv("data/processed/processed_data.csv")
 regions = sorted(raw_data["Region"].dropna().unique().tolist())
 studies = sorted(raw_data["Field_of_Study"].dropna().unique().tolist())
 industries = sorted(raw_data["Top_Industry"].dropna().unique().tolist())
+degrees = sorted(raw_data["Degree_Level"].dropna().unique().tolist())
+
+def render_cards_with_format(size, avg, q1, median, q3, unit_prefix="", unit_suffix=""):
+    """
+    This function helps data cards render more _professionally_ B)
+    I did the HTML with ChatGPT because I do not have the time to
+    learn how to centre divs.
+    """
+
+    def fmt(x):
+        if pd.isna(x):
+            return "-"
+        return f"{unit_prefix}{x:.1f}{unit_suffix}"
+
+    return f"""
+        <div style="width: 100%; text-align: center;">
+
+            <div style="font-size: {size}pt; margin-bottom: 6px;">
+                <br/>Average
+            </div>
+
+            <div style="font-size: {size * 2}pt; font-weight: 700; line-height: 1.1; margin-bottom: 24px;">
+                {fmt(avg)}
+            </div>
+
+            <div style="
+                display: grid;
+                grid-template-columns: auto auto;
+                justify-content: center;
+                column-gap: 18px;
+                row-gap: 6px;
+                font-size: {int(size * 0.8)}pt;
+                line-height: 1.4;
+            ">
+                <div style="text-align: right;">Bottom 25%:</div>
+                <div style="font-weight: 700; text-align: left;">< {fmt(q1)}</div>
+
+                <div style="text-align: right;">Median:</div>
+                <div style="font-weight: 700; text-align: left;">~ {fmt(median)}</div>
+
+                <div style="text-align: right;">Top 25%:</div>
+                <div style="font-weight: 700; text-align: left;">> {fmt(q3)}</div>
+            </div>
+
+        </div>
+    """
 
 app_ui = ui.page_fluid(
     ui.panel_title("Graduate Skills Employability Dashboard"),
@@ -49,6 +96,17 @@ app_ui = ui.page_fluid(
                     ),
                 ),
                 ui.accordion_panel(
+                    "Degree Level",
+                    (
+                        ui.input_checkbox_group(
+                            id="degree",
+                            label="Degree",
+                            choices=degrees,
+                            selected=degrees,
+                        )
+                    ),
+                ),
+                ui.accordion_panel(
                     "Industry",
                     (
                         ui.input_checkbox_group(
@@ -59,7 +117,8 @@ app_ui = ui.page_fluid(
                         )
                     ),
                 ),
-                open=False,
+                open=False
+                
             ),
             ui.input_slider(
                 id="grad_year",
@@ -73,18 +132,33 @@ app_ui = ui.page_fluid(
                 step=1,
                 ticks=True,
                 animate=True,
+                sep="",
             ),
             ui.input_action_button("reset_btn", "Reset Filters"),
+            width=300
         ),
         ui.layout_columns(
-            ui.value_box("Employment Rate 6 Month", ui.output_ui("emp_rate_6")),
-            ui.value_box("Employment Rate 12 Month", ui.output_ui("emp_rate_12")),
-            ui.value_box("Starting Salary", ui.output_ui("starting_salary")),
+            ui.value_box(
+                ui.div("Employment Rate (after 6 months)", class_="text-center w-100"),
+                ui.output_ui("emp_rate_6"),
+                theme="blue",
+            ),
+            ui.value_box(
+                ui.div("Employment Rate (after 1 year)", class_="text-center w-100"),
+                ui.output_ui("emp_rate_12"),
+                theme="blue",
+            ),
+            ui.value_box(
+                ui.div("Starting Annual Salary (USD)", class_="text-center w-100"),
+                ui.output_ui("starting_salary"),
+                theme="blue",
+            ),
             fill=False,
         ),
         ui.layout_columns(
             ui.card(
                 ui.card_header("Top Universities"),
+                ui.input_action_button("clear_uni_selection", "Clear selected rows"),
                 ui.output_data_frame("university_table"),
                 full_screen=True,
             ),
@@ -104,6 +178,11 @@ app_ui = ui.page_fluid(
             ),
         ),
     ),
+    ui.hr(),
+    ui.p(
+        "Graduate employability dashboard | Authors: Wesley Beard, Harrison Li, Hector Palafox Prieto, Apoorva Srivastava | Repository: https://github.com/UBC-MDS/DSCI-532_2026_12_GradSkills | Last updated: 2026-02-28",
+        class_="text-center text-muted",
+    )
 )
 
 
@@ -122,6 +201,7 @@ def server(input, output, session):
         ui.update_checkbox_group("region", choices=regions, selected=regions)
         ui.update_checkbox_group("study", choices=studies, selected=studies)
         ui.update_checkbox_group("industry", choices=industries, selected=industries)
+        ui.update_checkbox_group("degree", choices=degrees, selected=degrees)
 
     @reactive.calc
     def filtered_data():
@@ -138,54 +218,76 @@ def server(input, output, session):
         idx2 = df["Country"].isin(input.country())
         idx3 = df["Field_of_Study"].isin(input.study())
         idx4 = df["Top_Industry"].isin(input.industry())
+        idx5 = df["Degree_Level"].isin(input.degree())
 
-        return df[idx0 & idx1 & idx2 & idx3 & idx4]
+        return df[idx0 & idx1 & idx2 & idx3 & idx4 & idx5]
 
     @render.ui
     def emp_rate_6():
-        col = filtered_data()["Employment_Rate_6_Months (%)"]
+        col = filter_data_by_university()["Employment_Rate_6_Months (%)"]
+
+        size = 14
+
+        if col.empty:
+            return ui.HTML(
+                render_cards_with_format(size, np.nan, np.nan, np.nan, np.nan, unit_suffix="%")
+            )  
+
+        q1 = col.quantile(0.25)
+        median = col.median()
+        q3 = col.quantile(0.75)
+        avg = col.mean()
+
         return ui.HTML(
-            """
-            <div style="font-size: 16pt;line-height:1.5;">
-            Q1: {:.1f}%<br/>
-            median: {:.1f}%<br/>
-            Q3: {:.1f}%<br/>
-            mean: {:.1f}%
-            </div>
-            """.format(
-                col.quantile(0.25), col.median(), col.quantile(0.75), col.mean()
+            render_cards_with_format(
+                size, avg, q1, median, q3, unit_suffix="%"
             )
         )
 
     @render.ui
     def emp_rate_12():
-        col = filtered_data()["Employment_Rate_12_Months (%)"]
+        col = filter_data_by_university()["Employment_Rate_12_Months (%)"]
+
+        size = 14
+
+        if col.empty:
+            return ui.HTML(
+                render_cards_with_format(size, np.nan, np.nan, np.nan, np.nan, unit_suffix="%")
+            )
+
+        q1 = col.quantile(0.25)
+        median = col.median()
+        q3 = col.quantile(0.75)
+        avg = col.mean()
+
         return ui.HTML(
-            """
-            <div style="font-size: 16pt;line-height:1.5;">
-            Q1: {:.1f}%<br/>
-            median: {:.1f}%<br/>
-            Q3: {:.1f}%<br/>
-            mean: {:.1f}%
-            </div>
-            """.format(
-                col.quantile(0.25), col.median(), col.quantile(0.75), col.mean()
+            render_cards_with_format(
+                size, avg, q1, median, q3, unit_suffix="%"
             )
         )
 
     @render.ui
     def starting_salary():
-        col = filtered_data()["Average_Starting_Salary_USD"]
+        col = filter_data_by_university()["Average_Starting_Salary_USD"]
+
+        size = 14
+
+        if col.empty:
+            return ui.HTML(
+                render_cards_with_format(size, np.nan, np.nan, np.nan, np.nan, unit_prefix="$", unit_suffix="K")
+            )
+
+        
+
+        q1 = col.quantile(0.25) / 1000
+        median = col.median() / 1000
+        q3 = col.quantile(0.75) / 1000
+        avg = col.mean() / 1000
+
+        ## I asked ChatGPT how to tune this so that it looked nicer from the defaults
         return ui.HTML(
-            """
-            <div style="font-size: 16pt; line-height:1.5;">
-            Q1: {:.1f}<br/>
-            median: {:.1f}<br/>
-            Q3: {:.1f}<br/>
-            mean: {:.1f}
-            </div>
-            """.format(
-                col.quantile(0.25), col.median(), col.quantile(0.75), col.mean()
+            render_cards_with_format(
+                size, avg, q1, median, q3, unit_prefix="$", unit_suffix="K"
             )
         )
 
@@ -234,24 +336,37 @@ def server(input, output, session):
         top_uni = (
             top_uni.set_index("University_Name").reindex(ordered_unis).reset_index()
         )
-        return top_uni
+        return top_uni[["rank", "University_Name", "mean_overall"]]
 
     @reactive.calc
     def filter_data_by_university():
         data = filtered_data()
-        university_idx = list(input.university_table_selected_rows())
-        if not university_idx:
+
+        if data.empty:
             return data
-        selected_universities = (
-            top_uni().iloc[university_idx]["University_Name"].tolist()
-        )
-        # print(selected_universities)
+
+        selected_rows = list(input.university_table_selected_rows() or [])
+        if not selected_rows:
+            return data
+
+        current_top = top_uni()
+
+        valid_rows = [i for i in selected_rows if 0 <= i < len(current_top)]
+
+        if not valid_rows:
+            return data
+
+        selected_universities = current_top.iloc[valid_rows]["University_Name"].tolist()
+
         return data[data["University_Name"].isin(selected_universities)]
 
     @render.data_frame
     def university_table():
-        table_display = top_uni()[["University_Name", "rank", "mean_overall"]].copy()
-        table_display.columns = ["Name", "Rank", "Mean Employment Rate (%)"]
+
+        _ = input.clear_uni_selection()
+
+        table_display = top_uni()[["rank", "University_Name", "mean_overall"]].copy()
+        table_display.columns = ["Rank", "Name", "Mean Employment Rate (%)"]
         table_display["Mean Employment Rate (%)"] = table_display[
             "Mean Employment Rate (%)"
         ].round(1)
@@ -260,7 +375,7 @@ def server(input, output, session):
 
     @render_altair
     def industries_bar():
-        data = filter_data_by_university()
+        data = display_data()
 
         industry_salary = data.groupby("Top_Industry", as_index=False).agg(
             avg_salary=("Average_Starting_Salary_USD", "mean")
@@ -286,7 +401,7 @@ def server(input, output, session):
                     title="Average Starting Salary (USD)",
                     axis=alt.Axis(format="$,.0f"),
                 ),
-                color=alt.Color("Top_Industry:N", title="Industry"),
+                color=alt.Color("Top_Industry:N", title="Industry", legend=None),
                 tooltip=[
                     alt.Tooltip("rank:Q", title="Rank"),
                     alt.Tooltip("Top_Industry:N", title="Industry"),
@@ -306,7 +421,7 @@ def server(input, output, session):
 
     @render_altair
     def study_salary_plot():
-        data = filter_data_by_university()
+        data = display_data()
 
         salary_over_time = data.groupby(
             ["Graduation_Year", "Field_of_Study"], as_index=False
@@ -314,13 +429,12 @@ def server(input, output, session):
 
         highlight = alt.selection_point(fields=["Field_of_Study"], bind="legend")
 
-        if input.university_table_selected_rows():
-            ymin, ymax = (
-                data["Average_Starting_Salary_USD"].min() * 0.95,
-                data["Average_Starting_Salary_USD"].max() * 1.05,
-            )
-        else:
-            ymin, ymax = 4e4, 1e5
+        
+        ymin, ymax = (
+            salary_over_time["avg_salary"].min() * 0.95,
+            salary_over_time["avg_salary"].max() * 1.05
+        )
+        
 
         line_chart = (
             alt.Chart(salary_over_time)
@@ -333,7 +447,15 @@ def server(input, output, session):
                     axis=alt.Axis(format="$,.0f"),
                     scale=alt.Scale(domain=[ymin, ymax]),
                 ),
-                color=alt.Color("Field_of_Study:N", title="Field of Study"),
+                color=alt.Color(
+                    "Field_of_Study:N",
+                    title="Field of Study",
+                    legend=alt.Legend(
+                        orient="top",
+                        direction="horizontal",
+                        columns=3
+                    )
+                ),
                 opacity=alt.condition(highlight, alt.value(1), alt.value(0.12)),
                 tooltip=[
                     alt.Tooltip("Graduation_Year:O", title="Year"),
@@ -352,6 +474,12 @@ def server(input, output, session):
         )
 
         return line_chart
+    
+    @reactive.calc
+    def display_data():
+        data = filter_data_by_university()
+        req(not data.empty, cancel_output=True)
+        return data
 
 
 app = App(app_ui, server)

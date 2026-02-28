@@ -10,7 +10,7 @@ There are many ways to contibute including:
 
 ## Report Bugs
 
-Report bugs at [issues](https://github.ubc.ca/mds-2025-26/DSCI_532_viz-2_students/issues).
+Report bugs at [issues](https://github.com/UBC-MDS/DSCI-532_2026_12_GradSkills/issues).
 
 If you are reporting a bug, please follow the template guidelines. The more
 detailed your report, the easier and thus faster we can help you.
@@ -41,7 +41,7 @@ a pull request.
 
 ### Clone Repository, Create Branch, Code, and Submit Pull Request
 
-1. Clone this [repository](https://github.ubc.ca/mds-2025-26/DSCI_532_viz-2_students) and activate the environment.
+1. Clone this [repository](https://github.com/UBC-MDS/DSCI-532_2026_12_GradSkills) and activate the environment.
 
 ```bash
 git clone git@github.com:UBC-MDS/DSCI-532_2026_12_GradSkills.git
