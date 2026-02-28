@@ -13,7 +13,7 @@ This interactive employment analytics dashboard helps prospective students, rece
 ### Try it yourself
 
 Stable app: <https://019c9895-4ca7-509b-005a-24f784953ff2.share.connect.posit.cloud/>
-Preview app: <preview-url>
+Preview app: <https://019c8d1f-4579-872c-0b03-ba752a9dbf76.share.connect.posit.cloud/>
 
 ### Demo
 
