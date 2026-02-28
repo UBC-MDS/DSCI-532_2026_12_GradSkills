@@ -75,17 +75,34 @@ app_ui = ui.page_fillable(
             ),
             ui.input_action_button("reset_btn", "Reset Filters"),
         ),
+
         ui.layout_columns(
-            ui.value_box("Employment Rate 6 Month", ui.output_ui("emp_rate_6")),
-            ui.value_box("Employment Rate 12 Month", ui.output_ui("emp_rate_12")),
-            ui.value_box("Starting Salary", ui.output_ui("starting_salary")),
-            fill=False,
-        ),
-        ui.layout_columns(
-            ui.card(
-                ui.card_header("Top Universities"),
-                ui.output_data_frame("university_table"),
-                full_screen=True,
+            ui.layout_column_wrap(
+                ui.layout_column_wrap(
+                    ui.value_box(
+                        "Employment Rate 6 Month",
+                        ui.output_ui("emp_rate_6"),
+                        theme="blue",
+                    ),
+                    ui.value_box(
+                        "Employment Rate 12 Month",
+                        ui.output_ui("emp_rate_12"),
+                        theme="blue",
+                    ),
+                    ui.value_box(
+                        "Starting Salary",
+                        ui.output_ui("starting_salary"),
+                        theme="blue",
+                    ),
+                    width=1/3,
+                    fill=False
+                ),
+                ui.card(
+                    ui.card_header("Top Universities"),
+                    ui.output_data_frame("university_table"),
+                    full_screen=True,
+                ),
+                fill=True, width=1,
             ),
             ui.layout_column_wrap(
                 ui.card(
@@ -101,6 +118,7 @@ app_ui = ui.page_fillable(
                 width=1,
                 fill=True,
             ),
+            col_widths=[6, 6],
         ),
     ),
 )
@@ -145,7 +163,7 @@ def server(input, output, session):
         col = filtered_data()["Employment_Rate_6_Months (%)"]
         return ui.HTML(
             """
-            <div style="font-size: 16pt;line-height:1.5;">
+            <div style="font-size: 12pt;line-height:1.5;">
             Q1: {:.0f}%<br/>
             median: {:.0f}%<br/>
             Q3: {:.0f}%<br/>
@@ -161,7 +179,7 @@ def server(input, output, session):
         col = filtered_data()["Employment_Rate_12_Months (%)"]
         return ui.HTML(
             """
-            <div style="font-size: 16pt;line-height:1.5;">
+            <div style="font-size: 12pt;line-height:1.5;">
             Q1: {:.0f}%<br/>
             median: {:.0f}%<br/>
             Q3: {:.0f}%<br/>
@@ -177,7 +195,7 @@ def server(input, output, session):
         col = filtered_data()["Average_Starting_Salary_USD"]
         return ui.HTML(
             """
-            <div style="font-size: 16pt; line-height:1.5;">
+            <div style="font-size: 12pt; line-height:1.5;">
             Q1: ${:,.0f}<br/>
             median: ${:,.0f}<br/>
             Q3: ${:,.0f}<br/>
