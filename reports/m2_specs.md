@@ -134,3 +134,10 @@ flowchart TD
 
 - `industries_bar`
 - `study_salary_plot`
+
+## Complexity Enhancement
+
+Two additional complexity enhancements were made: a reset button and table row selection.
+A reset button helps the user to start fresh, especially if they have been quite involved
+in selecting different filters. The table row selection allows the user to dive deeper
+into the insights related to a single or multi-selected universities.
