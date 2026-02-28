@@ -297,13 +297,13 @@ def server(input, output, session):
             alt.Chart(top_industries)
             .mark_bar()
             .encode(
-                y=alt.Y("Top_Industry:N", sort=None, title="Top Industry"),
+                y=alt.Y("Top_Industry:N", sort=None, title=None),
                 x=alt.X(
                     "avg_salary:Q",
                     title="Average Starting Salary (USD)",
                     axis=alt.Axis(format="$,.0f"),
                 ),
-                color=alt.Color("Top_Industry:N", title="Industry"),
+                color=alt.Color("Top_Industry:N", title="Industry", legend=None),
                 tooltip=[
                     alt.Tooltip("rank:Q", title="Rank"),
                     alt.Tooltip("Top_Industry:N", title="Industry"),
