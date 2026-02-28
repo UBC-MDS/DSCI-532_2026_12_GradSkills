@@ -343,14 +343,23 @@ def server(input, output, session):
             alt.Chart(salary_over_time)
             .mark_line(point=True)
             .encode(
-                x=alt.X("Graduation_Year:O", title="Year", sort="ascending"),
+                x=alt.X(
+                    "Graduation_Year:O",
+                    title=None, 
+                    sort="ascending",
+                    axis=alt.Axis(labelAngle=0)
+                ),
                 y=alt.Y(
                     "avg_salary:Q",
-                    title="Average Starting Salary (USD)",
+                    title=None,
                     axis=alt.Axis(format="$,.0f"),
                     scale=alt.Scale(domain=[ymin, ymax]),
                 ),
-                color=alt.Color("Field_of_Study:N", title="Field of Study"),
+                color=alt.Color(
+                    "Field_of_Study:N",
+                    title="Field of Study",
+                    legend=alt.Legend(orient="right")
+                ),
                 opacity=alt.condition(highlight, alt.value(1), alt.value(0.12)),
                 tooltip=[
                     alt.Tooltip("Graduation_Year:O", title="Year"),
@@ -364,7 +373,7 @@ def server(input, output, session):
             .properties(
                 width="container",
                 height="container",
-                title="Average Starting Salary Over Time",
+                title="Average Starting Salary (USD) Over Time",
             )
         )
 
