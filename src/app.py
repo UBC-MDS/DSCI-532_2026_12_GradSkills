@@ -146,10 +146,10 @@ def server(input, output, session):
         return ui.HTML(
             """
             <div style="font-size: 16pt;line-height:1.5;">
-            Q1: {:.1f}%<br/>
-            median: {:.1f}%<br/>
-            Q3: {:.1f}%<br/>
-            mean: {:.1f}%
+            Q1: {:.0f}%<br/>
+            median: {:.0f}%<br/>
+            Q3: {:.0f}%<br/>
+            mean: {:.0f}%
             </div>
             """.format(
                 col.quantile(0.25), col.median(), col.quantile(0.75), col.mean()
@@ -162,10 +162,10 @@ def server(input, output, session):
         return ui.HTML(
             """
             <div style="font-size: 16pt;line-height:1.5;">
-            Q1: {:.1f}%<br/>
-            median: {:.1f}%<br/>
-            Q3: {:.1f}%<br/>
-            mean: {:.1f}%
+            Q1: {:.0f}%<br/>
+            median: {:.0f}%<br/>
+            Q3: {:.0f}%<br/>
+            mean: {:.0f}%
             </div>
             """.format(
                 col.quantile(0.25), col.median(), col.quantile(0.75), col.mean()
@@ -178,10 +178,10 @@ def server(input, output, session):
         return ui.HTML(
             """
             <div style="font-size: 16pt; line-height:1.5;">
-            Q1: {:.1f}<br/>
-            median: {:.1f}<br/>
-            Q3: {:.1f}<br/>
-            mean: {:.1f}
+            Q1: ${:,.0f}<br/>
+            median: ${:,.0f}<br/>
+            Q3: ${:,.0f}<br/>
+            mean: ${:,.0f}
             </div>
             """.format(
                 col.quantile(0.25), col.median(), col.quantile(0.75), col.mean()
