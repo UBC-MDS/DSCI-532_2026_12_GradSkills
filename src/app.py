@@ -72,7 +72,6 @@ app_ui = ui.page_fillable(
                 ],
                 step=1,
                 ticks=True,
-                animate=True,
             ),
             ui.input_action_button("reset_btn", "Reset Filters"),
         ),
