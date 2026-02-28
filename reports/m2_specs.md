@@ -71,6 +71,15 @@ flowchart TD
 
 **Transformations performed:**
 
+- Creates a copy of the full dataset (`raw_data`)
+- Filters rows to those where:
+  - `Graduation_Year` falls within the selected slider range (inclusive).
+  - `Region` is in the selected regions.
+  - `Country` is in the selected countries (dynamically updated based on region).
+  - `Field_of_Study` is in the selected study fields.
+  - `Top_Industry` is in the selected industries.
+- Returns the fully filtered subset of the dataset.
+
 **Outputs that consume it:**
 
 - `emp_rate_6`
@@ -87,6 +96,20 @@ flowchart TD
 
 **Transformations performed:**
 
+- Groups the filtered dataset by:
+  - `University_Name`
+  - `Region`
+  - `Country`
+- Computes:
+  - Mean 6-month employment rate
+  - Mean 12-month employment rate
+- Computes an overall mean employment rate (`mean_overall`) as the average 6 and 12-month rates.
+- Ranks universities using dense ranking in descending order of `mean_overall`.
+- Sorts universities by:
+  - Highest overall employment rate
+  - Alphabetical university name (tie-breaker)
+- Returns the ranked university-level summary table.
+
 **Outputs that consume it:**
 
 - `university_table`
@@ -101,6 +124,13 @@ flowchart TD
 - `university_table_selected_rows`
 
 **Transformations performed:**
+
+- Retrieves selected row indices from the interactive university DataGrid.
+- If no university is selected, it returns the full `filtered_data`.
+- If one or more universities are selected:
+  - Maps selected row indices to university names from `top_uni`.
+  - Filters `filtered_data` to include only those selected universities.
+- Returns a university-filtered subset for downstream visualizations. 
 
 **Outputs that consume it:**
 
