@@ -163,14 +163,18 @@ def server(input, output, session):
         col = filtered_data()["Employment_Rate_6_Months (%)"]
         return ui.HTML(
             """
-            <div style="font-size: 12pt;line-height:1.5;">
-            Q1: {:.0f}%<br/>
-            median: {:.0f}%<br/>
-            Q3: {:.0f}%<br/>
-            mean: {:.0f}%
+            <div style="font-size: 11pt;line-height:1.5;">
+            Average: {:.0f}%<br/>
+            Median: {:.0f}%<br/>
+            <br/>
+            25th Percentile: {:.0f}%<br/>
+            75th Percentile: {:.0f}%<br/>
             </div>
             """.format(
-                col.quantile(0.25), col.median(), col.quantile(0.75), col.mean()
+                col.mean(),
+                col.median(),
+                col.quantile(0.25),
+                col.quantile(0.75)
             )
         )
 
@@ -179,14 +183,18 @@ def server(input, output, session):
         col = filtered_data()["Employment_Rate_12_Months (%)"]
         return ui.HTML(
             """
-            <div style="font-size: 12pt;line-height:1.5;">
-            Q1: {:.0f}%<br/>
-            median: {:.0f}%<br/>
-            Q3: {:.0f}%<br/>
-            mean: {:.0f}%
+            <div style="font-size: 11pt;line-height:1.5;">
+            Average: {:.0f}%<br/>
+            Median: {:.0f}%<br/>
+            <br/>
+            25th Percentile: {:.0f}%<br/>
+            75th Percentile: {:.0f}%<br/>
             </div>
             """.format(
-                col.quantile(0.25), col.median(), col.quantile(0.75), col.mean()
+                col.mean(),
+                col.median(),
+                col.quantile(0.25),
+                col.quantile(0.75)
             )
         )
 
@@ -195,14 +203,18 @@ def server(input, output, session):
         col = filtered_data()["Average_Starting_Salary_USD"]
         return ui.HTML(
             """
-            <div style="font-size: 12pt; line-height:1.5;">
-            Q1: ${:,.0f}<br/>
-            median: ${:,.0f}<br/>
-            Q3: ${:,.0f}<br/>
-            mean: ${:,.0f}
+            <div style="font-size: 11pt;line-height:1.5;">
+            Average: ${:,.0f}<br/>
+            Median: ${:,.0f}<br/>
+            <br/>
+            25th Percentile: ${:,.0f}<br/>
+            75th Percentile: ${:,.0f}<br/>
             </div>
             """.format(
-                col.quantile(0.25), col.median(), col.quantile(0.75), col.mean()
+                col.mean(),
+                col.median(),
+                col.quantile(0.25),
+                col.quantile(0.75)
             )
         )
 
