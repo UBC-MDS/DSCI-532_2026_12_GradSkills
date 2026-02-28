@@ -56,7 +56,7 @@ def render_cards_with_format(size, avg, q1, median, q3, unit_prefix="", unit_suf
         </div>
     """
 
-app_ui = ui.page_fluid(
+app_ui = ui.page_fillable(
     ui.panel_title("Graduate Skills Employability Dashboard"),
     ui.layout_sidebar(
         ui.sidebar(
@@ -136,27 +136,34 @@ app_ui = ui.page_fluid(
             ui.input_action_button("reset_btn", "Reset Filters"),
             width=300
         ),
+
         ui.layout_columns(
-            ui.value_box(
-                ui.div("Employment Rate (after 6 months)", class_="text-center w-100"),
-                ui.output_ui("emp_rate_6")
-            ),
-            ui.value_box(
-                ui.div("Employment Rate (after 1 year)", class_="text-center w-100"),
-                ui.output_ui("emp_rate_12")
-            ),
-            ui.value_box(
-                ui.div("Starting Annual Salary (USD)", class_="text-center w-100"),
-                ui.output_ui("starting_salary")
-            ),
-            fill=False,
-        ),
-        ui.layout_columns(
-            ui.card(
-                ui.card_header("Top Universities"),
-                ui.input_action_button("clear_uni_selection", "Clear selected rows"),
-                ui.output_data_frame("university_table"),
-                full_screen=True,
+            ui.layout_column_wrap(
+                ui.layout_column_wrap(
+                    ui.value_box(
+                        "Employment Rate 6 Month",
+                        ui.output_ui("emp_rate_6"),
+                        theme="blue",
+                    ),
+                    ui.value_box(
+                        "Employment Rate 12 Month",
+                        ui.output_ui("emp_rate_12"),
+                        theme="blue",
+                    ),
+                    ui.value_box(
+                        "Starting Salary",
+                        ui.output_ui("starting_salary"),
+                        theme="blue",
+                    ),
+                    width=1/3,
+                    fill=True
+                ),
+                ui.card(
+                    ui.card_header("Top Universities"),
+                    ui.output_data_frame("university_table"),
+                    full_screen=True,
+                ),
+                fill=True, width=1,
             ),
             ui.layout_column_wrap(
                 ui.card(
@@ -172,6 +179,7 @@ app_ui = ui.page_fluid(
                 width=1,
                 fill=True,
             ),
+            col_widths=[6, 6],
         ),
     ),
     ui.hr(),
@@ -381,7 +389,7 @@ def server(input, output, session):
             alt.Chart(top_industries)
             .mark_bar()
             .encode(
-                y=alt.Y("Top_Industry:N", sort=None, title="Top Industry"),
+                y=alt.Y("Top_Industry:N", sort=None, title=None),
                 x=alt.X(
                     "avg_salary:Q",
                     title="Average Starting Salary (USD)",
@@ -426,21 +434,22 @@ def server(input, output, session):
             alt.Chart(salary_over_time)
             .mark_line(point=True)
             .encode(
-                x=alt.X("Graduation_Year:O", title="Year", sort="ascending"),
+                x=alt.X(
+                    "Graduation_Year:O",
+                    title=None, 
+                    sort="ascending",
+                    axis=alt.Axis(labelAngle=0)
+                ),
                 y=alt.Y(
                     "avg_salary:Q",
-                    title="Average Starting Salary (USD)",
+                    title=None,
                     axis=alt.Axis(format="$,.0f"),
                     scale=alt.Scale(domain=[ymin, ymax]),
                 ),
                 color=alt.Color(
                     "Field_of_Study:N",
                     title="Field of Study",
-                    legend=alt.Legend(
-                        orient="top",
-                        direction="horizontal",
-                        columns=3
-                    )
+                    legend=alt.Legend(orient="right")
                 ),
                 opacity=alt.condition(highlight, alt.value(1), alt.value(0.12)),
                 tooltip=[
@@ -455,7 +464,7 @@ def server(input, output, session):
             .properties(
                 width="container",
                 height="container",
-                title="Average Starting Salary Over Time",
+                title="Average Starting Salary (USD) Over Time",
             )
         )
 
