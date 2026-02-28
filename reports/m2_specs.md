@@ -6,10 +6,10 @@ Here are the dashboard specs for M2:
 
 | #   | Job Story                       | Status         | Notes                         |
 | --- | ------------------------------- | -------------- | ----------------------------- |
-| 1   | As a prospective graduate student, I want to filter employment outcomes by degree level and field of study, so that I can compare whether pursuing a Master's degree improves employment rates and salary.|  |                               |
-| 2   | As a student exploring job opportunities, I want to compare top industries in my field so that I can target high-demand sectors.|       |  |
-| 3   | As a career advisor, I want to visualize employment rates at both 6 and 12 months so that I can evaluate short-term versus longer-term employment stability for graduates.|   | 
-| 4   | As a university administrator, I want to view top-performing universities under specific filters so that I can benchmark institutional performance.|   |                               |
+| 1   | As a prospective graduate student, I want to filter employment outcomes by degree level, field of study, region, country, and graduation year so that I can compare employment rates and salary outcomes across contexts.| 🔄 Revised| Originally focused only on degree level and field of study in M1. Revised in M2 after implementing global filtering (region, country, industry and graduation year slider). The updated job story reflects the full filter panel functionality visible in the sidebar.|
+| 2   | As a student exploring job opportunities, I want to compare top industries in my field so that I can target high-demand and high-paying sectors.| ✅ Implemented| Implemented through the dynamic "Top Industries by Average Starting Salary" bar chart. The chart updates based on sidebar filters and university selection, allowing users to compare salary outcomes across industries within the filtered dataset.|
+| 3   | As a career advisor, I want to visualize employment rates at both 6 and 12 months so that I can evaluate short-term versus longer-term employment stability for graduates.| ✅ Implemented| Implemented using summary KPI cards displaying Q1, median, Q3, and mean values for 6-month and 12-month employment rates. These values reactively update based on all selected filters, enabling comparison of short-term versus long-term outcomes.| 
+| 4   | As a university administrator, I want to rank and interactively explore top-performing universities under selected filters so that I can benchmark institutional performance.| 🔄 Revised| Originally described as simply viewing top-performing universities as a horizontal bar-chart. Revised after implementing a ranked DataGrid with row selection. Selecting universities dynamically updates downstream visualizations (industry distribution and salary trends), enabling more detailed benchmarking analysis.|
 
 
 ## Component Inventory
@@ -71,7 +71,7 @@ flowchart TD
 
 **Transformations performed:**
 
-- Creates a copy of the full dataset (`raw_data`)
+- Starts from the full dataset (`raw_data`)
 - Filters rows to those where:
   - `Graduation_Year` falls within the selected slider range (inclusive).
   - `Region` is in the selected regions.
@@ -103,7 +103,7 @@ flowchart TD
 - Computes:
   - Mean 6-month employment rate
   - Mean 12-month employment rate
-- Computes an overall mean employment rate (`mean_overall`) as the average 6 and 12-month rates.
+- Computes an overall employment metric (`mean_overall`) as the average of the 6-month and 12-month mean employment rates.
 - Ranks universities using dense ranking in descending order of `mean_overall`.
 - Sorts universities by:
   - Highest overall employment rate
@@ -128,7 +128,7 @@ flowchart TD
 - Retrieves selected row indices from the interactive university DataGrid.
 - If no university is selected, it returns the full `filtered_data`.
 - If one or more universities are selected:
-  - Maps selected row indices to university names from `top_uni`.
+  - Maps selected row indices to the corresponding university names in `top_uni`.
   - Filters `filtered_data` to include only those selected universities.
 - Returns a university-filtered subset for downstream visualizations. 
 
