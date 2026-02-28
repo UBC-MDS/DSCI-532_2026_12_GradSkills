@@ -10,7 +10,7 @@ regions = sorted(raw_data["Region"].dropna().unique().tolist())
 studies = sorted(raw_data["Field_of_Study"].dropna().unique().tolist())
 industries = sorted(raw_data["Top_Industry"].dropna().unique().tolist())
 
-app_ui = ui.page_fluid(
+app_ui = ui.page_fillable(
     ui.panel_title("Graduate Skills Employability Dashboard"),
     ui.layout_sidebar(
         ui.sidebar(
