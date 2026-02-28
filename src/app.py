@@ -95,7 +95,7 @@ app_ui = ui.page_fillable(
                         theme="blue",
                     ),
                     width=1/3,
-                    fill=False
+                    fill=True
                 ),
                 ui.card(
                     ui.card_header("Top Universities"),
