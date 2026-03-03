@@ -5,8 +5,11 @@ import altair as alt
 from shiny import App, render, ui, reactive, req
 from shinywidgets import render_altair, render_widget, output_widget
 import datetime
+from pathlib import Path
 
 raw_data = pd.read_csv("data/processed/processed_data.csv")
+dashboard_description = Path("src/dashboard_description.md").read_text(encoding="utf-8")
+
 
 regions = sorted(raw_data["Region"].dropna().unique().tolist())
 studies = sorted(raw_data["Field_of_Study"].dropna().unique().tolist())
@@ -38,7 +41,6 @@ def render_metric_card(
     def px(x):
         return f"{x * spacing_scale:.1f}px"
 
-    # Determine state
     bg_color = "#8b8b8b"
     delta_line_1 = f"Same vs {comparison_label}"
     delta_line_2 = f"({fmt(baseline)})"
@@ -58,6 +60,8 @@ def render_metric_card(
             bg_color = "#ff1616"
             delta_line_1 = f"↓ {delta_pct:+.0f}% vs {comparison_label}"
             delta_line_2 = f"({fmt(baseline)})"
+
+    ### Then again, I asked ChatGPT to help me with this HTML formatting.
 
     return f"""
         <div style="
@@ -154,7 +158,15 @@ salary_baseline = baseline_data["Average_Starting_Salary_USD"].mean()
 
 
 app_ui = ui.page_fluid(
-    ui.panel_title("Graduate Skills Employability Dashboard"),
+    # ui.panel_title("Graduate Skills Employability Dashboard"),
+    ui.accordion(
+        ui.accordion_panel(
+            "About this dashboard",
+            ui.card(
+                ui.markdown(dashboard_description)
+            ),
+        ),
+    ),
     ui.layout_sidebar(
         ui.sidebar(
             ui.accordion(
