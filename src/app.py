@@ -4,7 +4,6 @@ import pandas as pd
 import altair as alt
 from shiny import App, render, ui, reactive, req
 from shinywidgets import render_altair, render_widget, output_widget
-import datetime
 from pathlib import Path
 
 raw_data = pd.read_csv("data/processed/processed_data.csv")
