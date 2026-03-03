@@ -177,16 +177,91 @@ app_ui = ui.page_fluid(
                 fill=True,
             ),
         ),
+        ui.layout_columns(
+            ui.card(
+                ui.card_header("Side-by-side University comparison"),
+                ui.layout_column_wrap(
+                    ui.card(
+                        ui.card_header("Employment Rate (after 6 months)"),
+                        output_widget("uni_emp_rate_6"),
+                        full_screen=True,
+                    ),
+                    ui.card(
+                        ui.card_header("Employment Rate (after 1 year)"),
+                        output_widget("uni_emp_rate_12"),
+                        full_screen=True,
+                    ),
+                    ui.card(
+                        ui.card_header("Average Yearly Starting Salary"),
+                        output_widget("uni_salary"),
+                        full_screen=True,
+                    ),
+                )
+            )
+        )
     ),
     ui.hr(),
     ui.p(
-        "Graduate employability dashboard | Authors: Wesley Beard, Harrison Li, Hector Palafox Prieto, Apoorva Srivastava | Repository: https://github.com/UBC-MDS/DSCI-532_2026_12_GradSkills | Last updated: 2026-02-28",
+        (
+            "Graduate employability dashboard"
+            " | Authors: Wesley Beard, Harrison Li, Hector Palafox Prieto, Apoorva Srivastava |"
+            " Repository: https://github.com/UBC-MDS/DSCI-532_2026_12_GradSkills |"
+            " Last updated: 2026-02-28"
+        ),
         class_="text-center text-muted",
     )
 )
 
 
 def server(input, output, session):
+
+    def generate_uni_plot(col, col_title, col_style, col_format):
+
+        unis = list(input.university_table_selected_rows() or [])
+
+        if unis:
+            data = (
+                display_data()[["University_Name", "Country", "Region", col]]
+                    .groupby(["University_Name", "Country", "Region"], as_index=False)
+                    .agg(avg_col=(col, "mean"))
+            )
+            
+        
+        else:
+            mean_val = filtered_data()[col].mean()
+            
+            data = pd.DataFrame({
+                "University_Name": ["All"],
+                "Country": ["All"],
+                "Region": ["All"],
+                "avg_col": [mean_val]
+            })
+
+        
+        return alt.Chart(data).mark_bar().encode(
+            x=alt.X(
+                "University_Name",
+                title=""
+            ),
+            y=alt.Y(
+                "avg_col" + col_style,
+                title="",
+            ),
+            color=alt.Color(
+                "University_Name",
+                legend=None
+            ),
+            tooltip=[
+                alt.Tooltip("University_Name", title="University"),
+                alt.Tooltip("Country", title="Country"),
+                alt.Tooltip("Region", title="Region"),
+                alt.Tooltip("avg_col" + col_style, title=col_title, format=col_format)
+            ]
+        ).properties(
+            width="container",
+            height="container",
+            title="",
+        )
 
     @reactive.effect
     @reactive.event(input.reset_btn)
@@ -475,6 +550,38 @@ def server(input, output, session):
 
         return line_chart
     
+    @render_altair
+    def uni_emp_rate_6():
+
+        col = "Employment_Rate_6_Months (%)"
+        col_title = "Employment Rate (6 months) %"
+        col_style = ":Q"
+        col_format = ".2f"
+
+        return generate_uni_plot(col, col_title, col_style, col_format)
+
+                
+    
+    @render_altair
+    def uni_emp_rate_12():
+
+        col = "Employment_Rate_12_Months (%)"
+        col_title = "Employment Rate (1 year) %"
+        col_style = ":Q"
+        col_format = ".2f"
+
+        return generate_uni_plot(col, col_title, col_style, col_format)     
+    
+    @render_altair
+    def uni_salary():
+
+        col = "Average_Starting_Salary_USD"
+        col_title = "Average Starting Salary (USD)"
+        col_style = ":Q"
+        col_format = "$,.2f"
+
+        return generate_uni_plot(col, col_title, col_style, col_format)    
+
     @reactive.calc
     def display_data():
         data = filter_data_by_university()
