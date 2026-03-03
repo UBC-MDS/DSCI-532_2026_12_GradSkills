@@ -4,6 +4,7 @@ import pandas as pd
 import altair as alt
 from shiny import App, render, ui, reactive, req
 from shinywidgets import render_altair, render_widget, output_widget
+import datetime
 
 raw_data = pd.read_csv("data/processed/processed_data.csv")
 
@@ -12,50 +13,145 @@ studies = sorted(raw_data["Field_of_Study"].dropna().unique().tolist())
 industries = sorted(raw_data["Top_Industry"].dropna().unique().tolist())
 degrees = sorted(raw_data["Degree_Level"].dropna().unique().tolist())
 
-def render_cards_with_format(size, avg, q1, median, q3, unit_prefix="", unit_suffix=""):
-    """
-    This function helps data cards render more _professionally_ B)
-    I did the HTML with ChatGPT because I do not have the time to
-    learn how to centre divs.
-    """
-
+def render_metric_card(
+    title,
+    avg,
+    q1,
+    median,
+    q3,
+    baseline,
+    unit_prefix="",
+    unit_suffix="",
+    threshold_pct=1.0,
+    comparison_label="Global Last 5 Years",
+    font_scale=0.75,
+    spacing_scale=0.72,   # controls padding / margins / gaps
+):
     def fmt(x):
         if pd.isna(x):
             return "-"
         return f"{unit_prefix}{x:.1f}{unit_suffix}"
 
-    return f"""
-        <div style="width: 100%; text-align: center;">
+    def pt(x):
+        return f"{x * font_scale:.1f}pt"
 
-            <div style="font-size: {size}pt; margin-bottom: 6px;">
-                <br/>Average
+    def px(x):
+        return f"{x * spacing_scale:.1f}px"
+
+    # Determine state
+    bg_color = "#8b8b8b"
+    delta_line_1 = f"Same vs {comparison_label}"
+    delta_line_2 = f"({fmt(baseline)})"
+
+    if not pd.isna(avg) and not pd.isna(baseline) and baseline != 0:
+        delta_pct = ((avg - baseline) / baseline) * 100
+
+        if abs(delta_pct) < threshold_pct:
+            bg_color = "#8b8b8b"
+            delta_line_1 = f"Same vs {comparison_label}"
+            delta_line_2 = f"({fmt(baseline)})"
+        elif delta_pct > 0:
+            bg_color = "#06b84f"
+            delta_line_1 = f"↑ {delta_pct:+.0f}% vs {comparison_label}"
+            delta_line_2 = f"({fmt(baseline)})"
+        else:
+            bg_color = "#ff1616"
+            delta_line_1 = f"↓ {delta_pct:+.0f}% vs {comparison_label}"
+            delta_line_2 = f"({fmt(baseline)})"
+
+    return f"""
+        <div style="
+            width: 100%;
+            min-height: {px(320)};
+            background: {bg_color};
+            color: white;
+            border-radius: {px(34)};
+            padding: {px(18)} {px(18)} {px(20)} {px(18)};
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            box-sizing: border-box;
+        ">
+            <div style="
+                font-size: {pt(19)};
+                font-weight: 500;
+                line-height: 1.20;
+                margin-top: {px(2)};
+                margin-bottom: {px(20)};
+            ">
+                {title}
             </div>
 
-            <div style="font-size: {size * 2}pt; font-weight: 700; line-height: 1.1; margin-bottom: 24px;">
+            <div style="
+                font-size: {pt(24)};
+                font-weight: 400;
+                line-height: 1.10;
+                margin-bottom: {px(4)};
+            ">
+                Average
+            </div>
+
+            <div style="
+                font-size: {pt(46)};
+                font-weight: 700;
+                line-height: 1.0;
+                margin-bottom: {px(12)};
+            ">
                 {fmt(avg)}
+            </div>
+
+            <div style="
+                font-size: {pt(16)};
+                font-weight: 700;
+                line-height: 1.20;
+                margin-bottom: {px(18)};
+            ">
+                {delta_line_1}<br>
+                <span style="
+                    font-size: {pt(16)};
+                    font-weight: 700;
+                ">
+                    {delta_line_2}
+                </span>
             </div>
 
             <div style="
                 display: grid;
                 grid-template-columns: auto auto;
                 justify-content: center;
-                column-gap: 18px;
-                row-gap: 6px;
-                font-size: {int(size * 0.8)}pt;
-                line-height: 1.4;
+                column-gap: {px(14)};
+                row-gap: {px(3)};
+                font-size: {pt(12)};
+                line-height: 1.20;
             ">
-                <div style="text-align: right;">Bottom 25%:</div>
-                <div style="font-weight: 700; text-align: left;">< {fmt(q1)}</div>
+                <div style="text-align: right; font-weight: 400;">Bottom 25%:</div>
+                <div style="text-align: left; font-weight: 400;">&lt; {fmt(q1)}</div>
 
-                <div style="text-align: right;">Median:</div>
-                <div style="font-weight: 700; text-align: left;">~ {fmt(median)}</div>
+                <div style="text-align: right; font-weight: 400;">Median:</div>
+                <div style="text-align: left; font-weight: 400;">~ {fmt(median)}</div>
 
-                <div style="text-align: right;">Top 25%:</div>
-                <div style="font-weight: 700; text-align: left;">> {fmt(q3)}</div>
+                <div style="text-align: right; font-weight: 400;">Top 25%:</div>
+                <div style="text-align: left; font-weight: 400;">&gt; {fmt(q3)}</div>
             </div>
-
         </div>
     """
+
+
+## Preprocess baseline metrics
+
+
+baseline_data = raw_data.copy()
+last_year = int(baseline_data["Graduation_Year"].max())
+
+baseline_data = baseline_data[baseline_data["Graduation_Year"] > last_year - 5]
+
+emp_6_baseline = baseline_data["Employment_Rate_6_Months (%)"].mean()
+emp_12_baseline = baseline_data["Employment_Rate_12_Months (%)"].mean()
+salary_baseline = baseline_data["Average_Starting_Salary_USD"].mean()
+
+
+
 
 app_ui = ui.page_fluid(
     ui.panel_title("Graduate Skills Employability Dashboard"),
@@ -126,7 +222,7 @@ app_ui = ui.page_fluid(
                 min=raw_data["Graduation_Year"].min(),
                 max=raw_data["Graduation_Year"].max(),
                 value=[
-                    raw_data["Graduation_Year"].min(),
+                    raw_data["Graduation_Year"].max() - 4,
                     raw_data["Graduation_Year"].max(),
                 ],
                 step=1,
@@ -138,21 +234,9 @@ app_ui = ui.page_fluid(
             width=300
         ),
         ui.layout_columns(
-            ui.value_box(
-                ui.div("Employment Rate (after 6 months)", class_="text-center w-100"),
-                ui.output_ui("emp_rate_6"),
-                theme="blue",
-            ),
-            ui.value_box(
-                ui.div("Employment Rate (after 1 year)", class_="text-center w-100"),
-                ui.output_ui("emp_rate_12"),
-                theme="blue",
-            ),
-            ui.value_box(
-                ui.div("Starting Annual Salary (USD)", class_="text-center w-100"),
-                ui.output_ui("starting_salary"),
-                theme="blue",
-            ),
+            ui.output_ui("emp_rate_6"),
+            ui.output_ui("emp_rate_12"),
+            ui.output_ui("starting_salary"),
             fill=False,
         ),
         ui.layout_columns(
@@ -217,50 +301,42 @@ def server(input, output, session):
 
     def generate_uni_plot(col, col_title, col_style, col_format):
 
-        unis = list(input.university_table_selected_rows() or [])
+        data_source = filter_data_by_university()
+        req(not data_source.empty, cancel_output=True)
 
-        if unis:
-            data = (
-                display_data()[["University_Name", "Country", "Region", col]]
-                    .groupby(["University_Name", "Country", "Region"], as_index=False)
-                    .agg(avg_col=(col, "mean"))
-            )
-            
-        
-        else:
-            mean_val = filtered_data()[col].mean()
-            
-            data = pd.DataFrame({
+        plot_data = (
+            data_source[["University_Name", "Country", "Region", col]]
+                .groupby(["University_Name", "Country", "Region"], as_index=False)
+                .agg(avg_col=(col, "mean"))
+        )
+
+        selected_rows = list(input.university_table_selected_rows() or [])
+
+        if not selected_rows:
+            plot_data = pd.DataFrame({
                 "University_Name": ["All"],
                 "Country": ["All"],
                 "Region": ["All"],
-                "avg_col": [mean_val]
+                "avg_col": [data_source[col].mean()]
             })
 
-        
-        return alt.Chart(data).mark_bar().encode(
-            x=alt.X(
-                "University_Name",
-                title=""
-            ),
-            y=alt.Y(
-                "avg_col" + col_style,
-                title="",
-            ),
-            color=alt.Color(
-                "University_Name",
-                legend=None
-            ),
-            tooltip=[
-                alt.Tooltip("University_Name", title="University"),
-                alt.Tooltip("Country", title="Country"),
-                alt.Tooltip("Region", title="Region"),
-                alt.Tooltip("avg_col" + col_style, title=col_title, format=col_format)
-            ]
-        ).properties(
-            width="container",
-            height="container",
-            title="",
+        req(not plot_data.empty, cancel_output=True)
+
+        return (
+            alt.Chart(plot_data)
+            .mark_bar()
+            .encode(
+                x=alt.X("University_Name", title=""),
+                y=alt.Y("avg_col" + col_style, title=""),
+                color=alt.Color("University_Name", legend=None),
+                tooltip=[
+                    alt.Tooltip("University_Name", title="University"),
+                    alt.Tooltip("Country", title="Country"),
+                    alt.Tooltip("Region", title="Region"),
+                    alt.Tooltip("avg_col" + col_style, title=col_title, format=col_format),
+                ],
+            )
+            .properties(width="container", height="container", title="")
         )
 
     @reactive.effect
@@ -269,7 +345,7 @@ def server(input, output, session):
         ui.update_slider(
             "grad_year",
             value=[
-                int(raw_data["Graduation_Year"].min()),
+                int(raw_data["Graduation_Year"].max() - 4),
                 int(raw_data["Graduation_Year"].max()),
             ],
         )
@@ -301,21 +377,28 @@ def server(input, output, session):
     def emp_rate_6():
         col = filter_data_by_university()["Employment_Rate_6_Months (%)"]
 
-        size = 14
-
         if col.empty:
             return ui.HTML(
-                render_cards_with_format(size, np.nan, np.nan, np.nan, np.nan, unit_suffix="%")
-            )  
-
-        q1 = col.quantile(0.25)
-        median = col.median()
-        q3 = col.quantile(0.75)
-        avg = col.mean()
+                render_metric_card(
+                    title="Employment Rate (after 6 months)",
+                    avg=np.nan,
+                    q1=np.nan,
+                    median=np.nan,
+                    q3=np.nan,
+                    baseline=emp_6_baseline,
+                    unit_suffix="%",
+                )
+            )
 
         return ui.HTML(
-            render_cards_with_format(
-                size, avg, q1, median, q3, unit_suffix="%"
+            render_metric_card(
+                title="Employment Rate (after 6 months)",
+                avg=col.mean(),
+                q1=col.quantile(0.25),
+                median=col.median(),
+                q3=col.quantile(0.75),
+                baseline=emp_6_baseline,
+                unit_suffix="%",
             )
         )
 
@@ -323,21 +406,28 @@ def server(input, output, session):
     def emp_rate_12():
         col = filter_data_by_university()["Employment_Rate_12_Months (%)"]
 
-        size = 14
-
         if col.empty:
             return ui.HTML(
-                render_cards_with_format(size, np.nan, np.nan, np.nan, np.nan, unit_suffix="%")
+                render_metric_card(
+                    title="Employment Rate (after 1 year)",
+                    avg=np.nan,
+                    q1=np.nan,
+                    median=np.nan,
+                    q3=np.nan,
+                    baseline=emp_12_baseline,
+                    unit_suffix="%",
+                )
             )
 
-        q1 = col.quantile(0.25)
-        median = col.median()
-        q3 = col.quantile(0.75)
-        avg = col.mean()
-
         return ui.HTML(
-            render_cards_with_format(
-                size, avg, q1, median, q3, unit_suffix="%"
+            render_metric_card(
+                title="Employment Rate (after 1 year)",
+                avg=col.mean(),
+                q1=col.quantile(0.25),
+                median=col.median(),
+                q3=col.quantile(0.75),
+                baseline=emp_12_baseline,
+                unit_suffix="%",
             )
         )
 
@@ -345,24 +435,30 @@ def server(input, output, session):
     def starting_salary():
         col = filter_data_by_university()["Average_Starting_Salary_USD"]
 
-        size = 14
-
         if col.empty:
             return ui.HTML(
-                render_cards_with_format(size, np.nan, np.nan, np.nan, np.nan, unit_prefix="$", unit_suffix="K")
+                render_metric_card(
+                    title="Starting Annual Salary (USD)",
+                    avg=np.nan,
+                    q1=np.nan,
+                    median=np.nan,
+                    q3=np.nan,
+                    baseline=salary_baseline / 1000,
+                    unit_prefix="$",
+                    unit_suffix="K",
+                )
             )
 
-        
-
-        q1 = col.quantile(0.25) / 1000
-        median = col.median() / 1000
-        q3 = col.quantile(0.75) / 1000
-        avg = col.mean() / 1000
-
-        ## I asked ChatGPT how to tune this so that it looked nicer from the defaults
         return ui.HTML(
-            render_cards_with_format(
-                size, avg, q1, median, q3, unit_prefix="$", unit_suffix="K"
+            render_metric_card(
+                title="Starting Annual Salary (USD)",
+                avg=col.mean() / 1000,
+                q1=col.quantile(0.25) / 1000,
+                median=col.median() / 1000,
+                q3=col.quantile(0.75) / 1000,
+                baseline=salary_baseline / 1000,
+                unit_prefix="$",
+                unit_suffix="K",
             )
         )
 
