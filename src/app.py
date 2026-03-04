@@ -157,7 +157,7 @@ salary_baseline = baseline_data["Average_Starting_Salary_USD"].mean()
 
 
 app_ui = ui.page_fluid(
-    # ui.panel_title("Graduate Skills Employability Dashboard"),
+    ui.panel_title("Graduate Skills Employability Dashboard"),
     ui.accordion(
         ui.accordion_panel(
             "About this dashboard",
