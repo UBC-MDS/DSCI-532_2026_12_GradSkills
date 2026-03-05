@@ -67,12 +67,10 @@ def ai_tab_server(input, output, session):
     """
     qc_vals = qc.server()
 
-    @output
     @render.text
     def ai_chat_title():
         return qc_vals.title() or "Graduate Employability Dataset"
     
-    @output
     @render.data_frame
     def ai_chat_table():
         return qc_vals.df()
