@@ -162,7 +162,7 @@ salary_baseline = baseline_data["Average_Starting_Salary_USD"].mean()
 
 
 app_ui = ui.page_navbar(
-    ui.nav_title("Dashboard"),
+    #ui.nav_title("Dashboard"),
     ui.accordion(
         ui.accordion_panel(
             "About this dashboard",
