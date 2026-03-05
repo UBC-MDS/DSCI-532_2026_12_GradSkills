@@ -1,11 +1,24 @@
+"""
+AI Assistant Tab for the Graduate Skills Employability Dashboard.
+
+This module contains the querychat-powered AI tab which allows users to
+filter the graduate employability dataset using natural language queries.
+
+Setup: 
+Requires a .env file in the project root with the following key:
+    GITHUB_TOKEN=your_github_token_here
+"""
+
+
 from pathlib import Path
-from shiny import ui, reactive, render
+from shiny import ui, render
 import querychat
 from chatlas import ChatGithub
 from dotenv import load_dotenv
 import pandas as pd
 
 # Load API keys from .env (project root)
+# .env should exist at the root of the directory, not inside src/
 load_dotenv(Path(__file__).parent.parent / ".env")
 
 raw_data = pd.read_csv("data/processed/processed_data.csv")
@@ -54,7 +67,11 @@ FOOTER = ui.p(
     
 def ai_tab_ui():
     """
-    add docstring
+    Return the AI Assistant nav_panel to be added to page_navbar in app.py
+
+    Contains the querychat sidebar for natural language filtering, a download
+    button to export the filtered data as CSV, and a dataframe card showing 
+    the current filtered dataset. 
     """
     return ui.nav_panel(
         "AI Assistant",
@@ -73,7 +90,22 @@ def ai_tab_ui():
 
 def ai_tab_server(input, output, session):
     """
-    add docstring
+    Register all server-side logic for the AI Assistant tab.
+
+    Calls qc.server() to initialize the querychat reactive values, then
+    wires up the dataframe output, the card title, and the CSV download
+    handler. Returns qc_vals so callers can access the filtered dataframe.
+
+    Parameters
+    ----------
+    input, output, session: Shiny session objects
+        Passed in from the main server() function in app.py
+
+    Returns
+    -------
+    qc_vals: querychat reactive values
+        Exposes qc_vals.df() (filtered dataframe) and qc_vals.title()
+        for use in app.py if needed.
     """
     qc_vals = qc.server()
 
