@@ -2,9 +2,14 @@
 import numpy as np
 import pandas as pd
 import altair as alt
+from dotenv import load_dotenv
 from shiny import App, render, ui, reactive, req
 from shinywidgets import render_altair, render_widget, output_widget
 from pathlib import Path
+
+from ai_tab import ai_tab_ui, ai_tab_server
+
+load_dotenv(Path(__file__).parent.parent / ".env")
 
 raw_data = pd.read_csv("data/processed/processed_data.csv")
 dashboard_description = Path("src/dashboard_description.md").read_text(encoding="utf-8")
@@ -156,8 +161,8 @@ salary_baseline = baseline_data["Average_Starting_Salary_USD"].mean()
 
 
 
-app_ui = ui.page_fluid(
-    ui.panel_title("Graduate Skills Employability Dashboard"),
+app_ui = ui.page_navbar(
+    ui.nav_title("Dashboard"),
     ui.accordion(
         ui.accordion_panel(
             "About this dashboard",
@@ -295,8 +300,9 @@ app_ui = ui.page_fluid(
             )
         )
     ),
-    ui.hr(),
-    ui.p(
+    ai_tab_ui(),
+    title="Graduate Skills Employability Dashboard",
+    footer=ui.p(
         (
             "Graduate employability dashboard"
             " | Authors: Wesley Beard, Harrison Li, Hector Palafox Prieto, Apoorva Srivastava |"
@@ -309,6 +315,8 @@ app_ui = ui.page_fluid(
 
 
 def server(input, output, session):
+
+    ai_tab_server(input, output, session)
 
     def generate_uni_plot(col, col_title, col_style, col_format):
 
