@@ -20,16 +20,23 @@ qc = querychat.QueryChat(
 """,
     data_description="""
 Graduate employability dataset with the following columns:
-- Region: geographic region (e.g. North America, Europe, Asia)
-- Country: country of the university
-- University_Name: name of the university
+- Country: country of the university (21 distinct countries)
+- Region: geographic region (e.g. North America, Europe etc.)
+- University_Name: name of the university (46 distinct categories)
+- Degree_Level: degree type completed (e.g. Bachelor, Master, PhD)
 - Field_of_Study: academic discipline (e.g. Computer Science, Business, Engineering)
-- Degree_Level: Bachelor, Master, PhD, MBA
-- Graduation_Year: year of graduation
-- Employment_Rate_6_Months (%): % of graduates employed within 6 months
-- Employment_Rate_12_Months (%): % of graduates employed within 13 months
-- Average_Starting_Salary_USD: average first-year salary in USD
-- Top_Industry: the industry most graduates from the row entered
+- Graduation_Year: year of graduation (2015-2025)
+- Employment_Rate_6_Months (%): % of graduates employed within 6 months (range: 65.5-99.0)
+- Employment_Rate_12_Months (%): % of graduates employed within 12 months (range: 68.0-100.0)
+- Average_Starting_Salary_USD: average first-year salary in USD (range: -1200 to 189400)
+- Top_Industry: most common industry graduates entered (7 distinct industries)
+- Job_Role: specific professional role (e.g. Data Analyst, Software Engineer)
+- Skill_1: primary in-demand skill associated with the role
+- Skill_2: secondary in-demand skill
+- Skill_3: tertiary in-demand skill
+- Skill_Demand_Score: market demand index for the graduate's skill profile (1-100)
+- Remote_Work_Availability (%): estimated share of roles offering remote work (range: 5-90)
+- Employer_Reputation_Score: employer reputation score (1-100)
 """,
     client=ChatGithub(model="gpt-4.1-mini"),    
 )
