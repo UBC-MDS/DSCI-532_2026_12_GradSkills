@@ -50,6 +50,7 @@ def ai_tab_ui():
         "AI Assistant",
         ui.layout_sidebar(
             qc.sidebar(),
+            ui.download_button("download_data", "Download filtered data as CSV"),
             ui.card(
                 ui.card_header(ui.output_text("ai_chat_title")),
                 ui.output_data_frame("ai_chat_table"),
