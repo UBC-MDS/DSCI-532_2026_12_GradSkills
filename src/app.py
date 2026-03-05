@@ -159,7 +159,13 @@ emp_12_baseline = baseline_data["Employment_Rate_12_Months (%)"].mean()
 salary_baseline = baseline_data["Average_Starting_Salary_USD"].mean()
 
 
-
+FOOTER = ui.p(
+    "Graduate employability dashboard"
+    " | Authors: Wesley Beard, Harrison Li, Hector Palafox Prieto, Apoorva Srivastava |"
+    " Repository: https://github.com/UBC-MDS/DSCI-532_2026_12_GradSkills |"
+    " Last updated: 2026-03-05",
+    class_="text-center text-muted",
+)
 
 app_ui = ui.page_navbar(
     ui.nav_panel("Dashboard",
@@ -300,6 +306,7 @@ app_ui = ui.page_navbar(
                 )
             ),
         ),
+        FOOTER, 
     ),
     ai_tab_ui(),
     title="Graduate Skills Employability Dashboard",

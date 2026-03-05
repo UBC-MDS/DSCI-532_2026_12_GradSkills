@@ -33,6 +33,14 @@ Graduate employability dataset with the following columns:
 """,
     client=ChatGithub(model="gpt-4.1-mini"),    
 )
+
+FOOTER = ui.p(
+    "Graduate employability dashboard"
+    " | Authors: Wesley Beard, Harrison Li, Hector Palafox Prieto, Apoorva Srivastava |"
+    " Repository: https://github.com/UBC-MDS/DSCI-532_2026_12_GradSkills |"
+    " Last updated: 2026-03-05",
+    class_="text-center text-muted",
+)
     
 def ai_tab_ui():
     """
@@ -49,6 +57,7 @@ def ai_tab_ui():
             ),
             fillable=True,
         ),
+        FOOTER,
     )
 
 def ai_tab_server(input, output, session):
