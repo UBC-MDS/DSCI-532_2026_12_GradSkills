@@ -15,8 +15,11 @@ qc = querychat.QueryChat(
     "graduate_employability",
     greeting="""👋 Ask me anything about graduate employability.
 
-* <span class="suggestion">Filter to Computer Science graduates</span>
-* <span class="suggestion">Which universities have the highest employment rate?</span>
+* <span class="suggestion">Which universities have the highest 12-month employment rate?</span>
+* <span class="suggestion">Compare starting salaries across degree levels</span>
+* <span class="suggestion">Filter to Technology industry graduates after 2020</span>
+* <span class="suggestion">Show me PhD graduates with salary above 80000</span>
+* <span class="suggestion">Which fields of study have the best 6-month employment rates?</span>
 """,
     data_description="""
 Graduate employability dataset with the following columns:
