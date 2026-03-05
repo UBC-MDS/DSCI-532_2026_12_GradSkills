@@ -10,3 +10,9 @@ dependencies:
   - anywidget
   - shiny
   - shinywidgets
+  - pip
+
+  - pip:
+    - querychat
+    - chatlas
+    - python-dotenv

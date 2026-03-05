@@ -2,9 +2,14 @@
 import numpy as np
 import pandas as pd
 import altair as alt
+from dotenv import load_dotenv
 from shiny import App, render, ui, reactive, req
 from shinywidgets import render_altair, render_widget, output_widget
 from pathlib import Path
+
+from ai_tab import ai_tab_ui, ai_tab_server
+
+load_dotenv(Path(__file__).parent.parent / ".env")
 
 raw_data = pd.read_csv("data/processed/processed_data.csv")
 dashboard_description = Path("src/dashboard_description.md").read_text(encoding="utf-8")
@@ -154,161 +159,173 @@ emp_12_baseline = baseline_data["Employment_Rate_12_Months (%)"].mean()
 salary_baseline = baseline_data["Average_Starting_Salary_USD"].mean()
 
 
+FOOTER = ui.p(
+    "Graduate employability dashboard"
+    " | Authors: Wesley Beard, Harrison Li, Hector Palafox Prieto, Apoorva Srivastava |"
+    " Repository: https://github.com/UBC-MDS/DSCI-532_2026_12_GradSkills |"
+    " Last updated: 2026-03-05",
+    class_="text-center text-muted",
+)
 
-
-app_ui = ui.page_fluid(
-    ui.panel_title("Graduate Skills Employability Dashboard"),
-    ui.accordion(
-        ui.accordion_panel(
-            "About this dashboard",
-            ui.card(
-                ui.markdown(dashboard_description)
-            ),
-        ),
-    ),
-    ui.layout_sidebar(
-        ui.sidebar(
-            ui.accordion(
-                ui.accordion_panel(
-                    "Region",
-                    (
-                        ui.input_checkbox_group(
-                            id="region",
-                            label="Region",
-                            choices=regions,
-                            selected=regions,
-                        )
-                    ),
-                ),
-                ui.accordion_panel(
-                    "Country",
-                    (
-                        ui.input_checkbox_group(
-                            id="country",
-                            label="Country",
-                            choices=[],
-                            selected=[],
-                        )
-                    ),
-                ),
-                ui.accordion_panel(
-                    "Field of Study",
-                    (
-                        ui.input_checkbox_group(
-                            id="study",
-                            label="Study",
-                            choices=studies,
-                            selected=studies,
-                        )
-                    ),
-                ),
-                ui.accordion_panel(
-                    "Degree Level",
-                    (
-                        ui.input_checkbox_group(
-                            id="degree",
-                            label="Degree",
-                            choices=degrees,
-                            selected=degrees,
-                        )
-                    ),
-                ),
-                ui.accordion_panel(
-                    "Industry",
-                    (
-                        ui.input_checkbox_group(
-                            id="industry",
-                            label="Industry",
-                            choices=industries,
-                            selected=industries,
-                        )
-                    ),
-                ),
-                open=False
-                
-            ),
-            ui.input_slider(
-                id="grad_year",
-                label="Graduation Year",
-                min=raw_data["Graduation_Year"].min(),
-                max=raw_data["Graduation_Year"].max(),
-                value=[
-                    raw_data["Graduation_Year"].max() - 4,
-                    raw_data["Graduation_Year"].max(),
-                ],
-                step=1,
-                ticks=True,
-                animate=True,
-                sep="",
-            ),
-            ui.input_action_button("reset_btn", "Reset Filters"),
-            width=300
-        ),
-        ui.layout_columns(
-            ui.output_ui("emp_rate_6"),
-            ui.output_ui("emp_rate_12"),
-            ui.output_ui("starting_salary"),
-            fill=False,
-        ),
-        ui.layout_columns(
-            ui.card(
-                ui.card_header("Top Universities"),
-                ui.input_action_button("clear_uni_selection", "Clear selected rows"),
-                ui.output_data_frame("university_table"),
-                full_screen=True,
-            ),
-            ui.layout_column_wrap(
+app_ui = ui.page_navbar(
+    ui.nav_panel("Dashboard",
+        ui.accordion(
+            ui.accordion_panel(
+                "About this dashboard",
                 ui.card(
-                    ui.card_header("Industries"),
-                    output_widget("industries_bar"),
+                    ui.markdown(dashboard_description)
+                ),
+            ),
+        ),
+        ui.layout_sidebar(
+            ui.sidebar(
+                ui.accordion(
+                    ui.accordion_panel(
+                        "Region",
+                        (
+                            ui.input_checkbox_group(
+                                id="region",
+                                label="Region",
+                                choices=regions,
+                                selected=regions,
+                            )
+                        ),
+                    ),
+                    ui.accordion_panel(
+                        "Country",
+                        (
+                            ui.input_checkbox_group(
+                                id="country",
+                                label="Country",
+                                choices=[],
+                                selected=[],
+                            )
+                        ),
+                    ),
+                    ui.accordion_panel(
+                        "Field of Study",
+                        (
+                            ui.input_checkbox_group(
+                                id="study",
+                                label="Study",
+                                choices=studies,
+                                selected=studies,
+                            )
+                        ),
+                    ),
+                    ui.accordion_panel(
+                        "Degree Level",
+                        (
+                            ui.input_checkbox_group(
+                                id="degree",
+                                label="Degree",
+                                choices=degrees,
+                                selected=degrees,
+                            )
+                        ),
+                    ),
+                    ui.accordion_panel(
+                        "Industry",
+                        (
+                            ui.input_checkbox_group(
+                                id="industry",
+                                label="Industry",
+                                choices=industries,
+                                selected=industries,
+                            )
+                        ),
+                    ),
+                    open=False
+                    
+                ),
+                ui.input_slider(
+                    id="grad_year",
+                    label="Graduation Year",
+                    min=raw_data["Graduation_Year"].min(),
+                    max=raw_data["Graduation_Year"].max(),
+                    value=[
+                        raw_data["Graduation_Year"].max() - 4,
+                        raw_data["Graduation_Year"].max(),
+                    ],
+                    step=1,
+                    ticks=True,
+                    animate=True,
+                    sep="",
+                ),
+                ui.input_action_button("reset_btn", "Reset Filters"),
+                width=300
+            ),
+            ui.layout_columns(
+                ui.output_ui("emp_rate_6"),
+                ui.output_ui("emp_rate_12"),
+                ui.output_ui("starting_salary"),
+                fill=False,
+            ),
+            ui.layout_columns(
+                ui.card(
+                    ui.card_header("Top Universities"),
+                    ui.input_action_button("clear_uni_selection", "Clear selected rows"),
+                    ui.output_data_frame("university_table"),
                     full_screen=True,
                 ),
-                ui.card(
-                    ui.card_header("Yearly Starting Salary for each Field of Study"),
-                    output_widget("study_salary_plot"),
-                    full_screen=True,
-                ),
-                width=1,
-                fill=True,
-            ),
-        ),
-        ui.layout_columns(
-            ui.card(
-                ui.card_header("Side-by-side University comparison"),
                 ui.layout_column_wrap(
                     ui.card(
-                        ui.card_header("Employment Rate (after 6 months)"),
-                        output_widget("uni_emp_rate_6"),
+                        ui.card_header("Industries"),
+                        output_widget("industries_bar"),
                         full_screen=True,
                     ),
                     ui.card(
-                        ui.card_header("Employment Rate (after 1 year)"),
-                        output_widget("uni_emp_rate_12"),
+                        ui.card_header("Yearly Starting Salary for each Field of Study"),
+                        output_widget("study_salary_plot"),
                         full_screen=True,
                     ),
-                    ui.card(
-                        ui.card_header("Average Yearly Starting Salary"),
-                        output_widget("uni_salary"),
-                        full_screen=True,
-                    ),
+                    width=1,
+                    fill=True,
+                ),
+            ),
+            ui.layout_columns(
+                ui.card(
+                    ui.card_header("Side-by-side University comparison"),
+                    ui.layout_column_wrap(
+                        ui.card(
+                            ui.card_header("Employment Rate (after 6 months)"),
+                            output_widget("uni_emp_rate_6"),
+                            full_screen=True,
+                        ),
+                        ui.card(
+                            ui.card_header("Employment Rate (after 1 year)"),
+                            output_widget("uni_emp_rate_12"),
+                            full_screen=True,
+                        ),
+                        ui.card(
+                            ui.card_header("Average Yearly Starting Salary"),
+                            output_widget("uni_salary"),
+                            full_screen=True,
+                        ),
+                    )
                 )
-            )
-        )
-    ),
-    ui.hr(),
-    ui.p(
-        (
-            "Graduate employability dashboard"
-            " | Authors: Wesley Beard, Harrison Li, Hector Palafox Prieto, Apoorva Srivastava |"
-            " Repository: https://github.com/UBC-MDS/DSCI-532_2026_12_GradSkills |"
-            " Last updated: 2026-02-28"
+            ),
         ),
-        class_="text-center text-muted",
-    )
+        FOOTER, 
+    ),
+    ai_tab_ui(),
+    title="Graduate Skills Employability Dashboard",
+    #footer=ui.p(
+    #    (
+    #        "Graduate employability dashboard"
+    #        " | Authors: Wesley Beard, Harrison Li, Hector Palafox Prieto, Apoorva Srivastava |"
+    #        " Repository: https://github.com/UBC-MDS/DSCI-532_2026_12_GradSkills |"
+    #        " Last updated: 2026-02-28"
+    #    ),
+    #    class_="text-center text-muted",
+    #    )
+    #)
 )
 
 
 def server(input, output, session):
+
+    ai_tab_server(input, output, session)
 
     def generate_uni_plot(col, col_title, col_style, col_format):
 
