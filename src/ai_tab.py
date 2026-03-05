@@ -77,5 +77,9 @@ def ai_tab_server(input, output, session):
     def ai_chat_table():
         return qc_vals.df()
     
+    @render.download(filename="graduate_employability_filtered.csv")
+    def download_data():
+        yield qc_vals.df().to_csv(index=False)
+    
     # Expose qc_vals so app.py can use the filtered df
     return qc_vals
