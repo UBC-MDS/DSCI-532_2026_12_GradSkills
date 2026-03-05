@@ -9,11 +9,16 @@ All notable changes to this project will be documented in this file.
 - Added a top-of-dashboard **About this dashboard** section with usage instructions and dataset limitations. @hpalafoxp
 - Added **side-by-side university comparison** charts for employment rate after 6 months, employment rate after 1 year, and average starting salary. @hpalafoxp
 - Added **baseline KPI comparisons** against the global average for the most recent 5 years (2021–2025). @hpalafoxp
+- Added **AI assistant tab** with a querychat natural language interface for filtering the dataset. @apoorva43
+- Added **filtered dataframe output** to the AI assistant tab that updates based on chat queries. @apoorva43
+- Added **CSV download button** to export the querychat-filtered data. @apoorva43
 
 ### [0.3.0] Changed
 
 - Changed the default graduation year filter to the **most recent 5 years**. @hpalafoxp
 - Updated the reset button to restore that 5-year default view. @hpalafoxp
+- Converted app layout from `page_fluid` to `page_navbar` to support multiple tabs. @apoorva43
+- Moved AI tab UI and server logic into a separate `src/ai_tab.py` module for readability. @apoorva43
 
 ### [0.3.0] Fixed
 
