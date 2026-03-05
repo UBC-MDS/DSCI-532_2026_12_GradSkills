@@ -6,27 +6,29 @@ All notable changes to this project will be documented in this file.
 
 ### [0.3.0] Added
 
-- Brief description of new features or components. Reference PRs where relevant (e.g., `#12`).
+- Added a top-of-dashboard **About this dashboard** section with usage instructions and dataset limitations. @hpalafoxp
+- Added **side-by-side university comparison** charts for employment rate after 6 months, employment rate after 1 year, and average starting salary. @hpalafoxp
+- Added **baseline KPI comparisons** against the global average for the most recent 5 years (2021–2025). @hpalafoxp
 
 ### [0.3.0] Changed
 
-- Deviations from the proposal/sketch/spec — and why you made them. Refer to the source, e.g. TA or Peer-Review issue
+- Changed the default graduation year filter to the **most recent 5 years**. @hpalafoxp
+- Updated the reset button to restore that 5-year default view. @hpalafoxp
 
 ### [0.3.0] Fixed
 
-- Known bugs resolved since the last milestone. Refer to the source, e.g. TA or Peer-Review issue
+- Improved selected-university handling so comparison charts still render a meaningful overall view when no rows are selected. @hpalafoxp
 
 ### [0.3.0] Known Issues
 
-- Bugs or incomplete features TAs should be aware of (so they are not mistaken for unfinished work).
+- The dataset only includes **46 universities** and covers **2015–2025** cohorts.
+- Some universities appear only in certain, non-consecutive years.
+- **Top Industry** is constrained by **Field of Study**.
+- The baseline is a **global benchmark**, not a filter-specific peer baseline.
 
 ### [0.3.0] Reflection
 
-1–2 paragraphs (max 300 words) addressing:
-
-- What the dashboard does well at this stage.
-- Current limitations and planned improvements.
-- Any intentional deviations from DSCI 531 visualization best practices.
+The dashboard now does a better job supporting exploration and direct comparison. Users can filter the data, compare one or more universities, and interpret results against a recent global benchmark. Current limitations come from the data set itself, including limited university coverage and uneven year availability.
 
 ## [v0.2.0] - 2026-02-28
 
