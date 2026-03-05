@@ -4,3 +4,6 @@ shiny==1.4.0
 shinywidgets==0.7.1
 pandas==3.0.1
 vl-convert-python==2.0.0rc1
+chatlas==0.15.2
+python-dotenv==1.2.2
+querychat==0.5.1
