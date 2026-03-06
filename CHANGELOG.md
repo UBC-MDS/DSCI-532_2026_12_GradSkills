@@ -23,6 +23,7 @@ All notable changes to this project will be documented in this file.
 ### [0.3.0] Fixed
 
 - Improved selected-university handling so comparison charts still render a meaningful overall view when no rows are selected. @hpalafoxp
+- Bumped `shiny` to `1.5.1` in `requirements.txt` to resolve dependency conflict with `querychat==0.5.1`. @apoorva43
 
 ### [0.3.0] Known Issues
 

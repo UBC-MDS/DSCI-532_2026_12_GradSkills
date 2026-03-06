@@ -1,4 +1,4 @@
-
+import sys
 import numpy as np
 import pandas as pd
 import altair as alt
@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 from shiny import App, render, ui, reactive, req
 from shinywidgets import render_altair, render_widget, output_widget
 from pathlib import Path
-
+sys.path.insert(0, str(Path(__file__).parent))
 from ai_tab import ai_tab_ui, ai_tab_server
 
 load_dotenv(Path(__file__).parent.parent / ".env")
