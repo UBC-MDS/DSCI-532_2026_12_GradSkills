@@ -168,14 +168,16 @@ FOOTER = ui.p(
 )
 
 app_ui = ui.page_navbar(
-    ui.nav_panel("Dashboard",
+    ui.nav_panel(
+        "Dashboard",
         ui.accordion(
             ui.accordion_panel(
-                "About this dashboard",
+                "Click to learn more about this dashboard.",
                 ui.card(
                     ui.markdown(dashboard_description)
                 ),
             ),
+            open=False
         ),
         ui.layout_sidebar(
             ui.sidebar(
