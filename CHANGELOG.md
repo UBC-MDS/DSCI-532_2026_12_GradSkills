@@ -12,6 +12,9 @@ All notable changes to this project will be documented in this file.
 - Added **AI assistant tab** with a querychat natural language interface for filtering the dataset. @apoorva43
 - Added **filtered dataframe output** to the AI assistant tab that updates based on chat queries. @apoorva43
 - Added **CSV download button** to export the querychat-filtered data. @apoorva43
+- Added **Top Industries** and **Average Yearly Salary** charts to AI assistant tab that filters based on question asked and query results - from main page with stylistic updates. @beardw
+- Added **Collapseable Toggle** to allow users to open or close all filters at once. @beardw
+- Added **Select All** option to all checkbox filters, except for 'degree_level'. @beardw
 
 ### [0.3.0] Changed
 
@@ -19,6 +22,13 @@ All notable changes to this project will be documented in this file.
 - Updated the reset button to restore that 5-year default view. @hpalafoxp
 - Converted app layout from `page_fluid` to `page_navbar` to support multiple tabs. @apoorva43
 - Moved AI tab UI and server logic into a separate `src/ai_tab.py` module for readability. @apoorva43
+- Changed the layout of the AI Assistant page to have the table on left and charts stacked on right. @beardw
+- Moved reset filter button to top of filters to prevent it being hidden if several filters are open. @beardw
+- Made the 'About Me' description collapsed on load to prevent users from having to do this each time. @beardw
+
+### [0.3.0] Removed
+
+- Removed duplicated checkbox filter name that appeared when opening the dropdown. @beardw
 
 ### [0.3.0] Fixed
 
@@ -31,10 +41,13 @@ All notable changes to this project will be documented in this file.
 - Some universities appear only in certain, non-consecutive years.
 - **Top Industry** is constrained by **Field of Study**.
 - The baseline is a **global benchmark**, not a filter-specific peer baseline.
+- Unselecting all in any one of the checkbox filters will leave dashboard blank.
 
 ### [0.3.0] Reflection
 
 The dashboard now does a better job supporting exploration and direct comparison. Users can filter the data, compare one or more universities, and interpret results against a recent global benchmark. Current limitations come from the data set itself, including limited university coverage and uneven year availability.
+
+
 
 ## [v0.2.0] - 2026-02-28
 
