@@ -187,9 +187,10 @@ app_ui = ui.page_navbar(
                     ui.accordion_panel(
                         "Region",
                         (
+                            ui.input_checkbox("region_all", "Select All", True),
                             ui.input_checkbox_group(
                                 id="region",
-                                label="Region",
+                                label=None,
                                 choices=regions,
                                 selected=regions,
                             )
@@ -198,9 +199,10 @@ app_ui = ui.page_navbar(
                     ui.accordion_panel(
                         "Country",
                         (
+                            ui.input_checkbox("country_all", "Select All", True),
                             ui.input_checkbox_group(
                                 id="country",
-                                label="Country",
+                                label=None,
                                 choices=[],
                                 selected=[],
                             )
@@ -209,9 +211,10 @@ app_ui = ui.page_navbar(
                     ui.accordion_panel(
                         "Field of Study",
                         (
+                            ui.input_checkbox("study_all", "Select All", True),
                             ui.input_checkbox_group(
                                 id="study",
-                                label="Study",
+                                label=None,
                                 choices=studies,
                                 selected=studies,
                             )
@@ -222,7 +225,7 @@ app_ui = ui.page_navbar(
                         (
                             ui.input_checkbox_group(
                                 id="degree",
-                                label="Degree",
+                                label=None,
                                 choices=degrees,
                                 selected=degrees,
                             )
@@ -231,9 +234,10 @@ app_ui = ui.page_navbar(
                     ui.accordion_panel(
                         "Industry",
                         (
+                            ui.input_checkbox("industry_all", "Select All", True),
                             ui.input_checkbox_group(
                                 id="industry",
-                                label="Industry",
+                                label=None,
                                 choices=industries,
                                 selected=industries,
                             )
@@ -727,6 +731,105 @@ def server(input, output, session):
             ui.update_accordion(
                 "sidebar_panels",
                 show=False
+            )
+
+    # # aware that this code needs to be refactored, however,
+    # # wanted concepted to be available on dashboard
+
+    # region
+    @reactive.effect
+    @reactive.event(input.region_all)
+    def _():
+        if input.region_all():
+            ui.update_checkbox_group(
+                "region",
+                selected=regions
+            )
+        else:
+            ui.update_checkbox_group(
+                "region",
+                selected=[]
+            )
+
+    @reactive.effect
+    @reactive.event(input.region)
+    def _():
+        if set(input.region()) == set(regions):
+            ui.update_checkbox(
+                "region_all",
+                value=True
+            )
+
+    # country
+    @reactive.effect
+    @reactive.event(input.country_all)
+    def _():
+        if input.country_all():
+            ui.update_checkbox_group(
+                "country",
+                selected=raw_data["Country"].dropna().unique().tolist()
+            )
+        else:
+            ui.update_checkbox_group(
+                "country",
+                selected=[]
+            )
+
+    @reactive.effect
+    @reactive.event(input.country)
+    def _():
+        if set(input.country()) == set(regions):
+            ui.update_checkbox(
+                "country_all",
+                value=True
+            )
+
+    # study
+    @reactive.effect
+    @reactive.event(input.study_all)
+    def _():
+        if input.study_all():
+            ui.update_checkbox_group(
+                "study",
+                selected=studies
+            )
+        else:
+            ui.update_checkbox_group(
+                "study",
+                selected=[]
+            )
+
+    @reactive.effect
+    @reactive.event(input.study)
+    def _():
+        if set(input.study()) == set(studies):
+            ui.update_checkbox(
+                "study_all",
+                value=True
+            )
+
+    # industry
+    @reactive.effect
+    @reactive.event(input.industry_all)
+    def _():
+        if input.industry_all():
+            ui.update_checkbox_group(
+                "industry",
+                selected=industries
+            )
+        else:
+            ui.update_checkbox_group(
+                "industry",
+                selected=[]
+            )
+
+    @reactive.effect
+    @reactive.event(input.industry)
+    def _():
+        if set(input.industry()) == set(industries):
+            ui.update_checkbox(
+                "industry_all",
+                value=True
             )
 
 
