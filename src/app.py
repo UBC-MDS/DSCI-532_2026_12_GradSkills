@@ -181,6 +181,8 @@ app_ui = ui.page_navbar(
         ),
         ui.layout_sidebar(
             ui.sidebar(
+                ui.input_action_button("reset_btn", "Reset Filters"),
+                ui.input_switch("sidebar_switch", "Open/Close Dropdowns"),
                 ui.accordion(
                     ui.accordion_panel(
                         "Region",
@@ -237,8 +239,8 @@ app_ui = ui.page_navbar(
                             )
                         ),
                     ),
+                    id="sidebar_panels",
                     open=False
-                    
                 ),
                 ui.input_slider(
                     id="grad_year",
@@ -254,7 +256,6 @@ app_ui = ui.page_navbar(
                     animate=True,
                     sep="",
                 ),
-                ui.input_action_button("reset_btn", "Reset Filters"),
                 width=300
             ),
             ui.layout_columns(
@@ -713,6 +714,20 @@ def server(input, output, session):
         data = filter_data_by_university()
         req(not data.empty, cancel_output=True)
         return data
+
+    @reactive.effect
+    @reactive.event(input.sidebar_switch)
+    def _():
+        if input.sidebar_switch():
+            ui.update_accordion(
+                "sidebar_panels",
+                show=True
+            )
+        else:
+            ui.update_accordion(
+                "sidebar_panels",
+                show=False
+            )
 
 
 app = App(app_ui, server)
