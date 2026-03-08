@@ -57,7 +57,7 @@ From the repository root, run:
 shiny run src/app.py
 ```
 
-Shiny will print a local URL in the terminal, typically **http://127.0.0.1:8000**. Open it in your browser.
+Shiny will print a local URL in the terminal, typically **<http://127.0.0.1:8000>**. Open it in your browser.
 
 **For more details, refer to [CONTRIBUTING.md](CONTRIBUTING.md)**
 

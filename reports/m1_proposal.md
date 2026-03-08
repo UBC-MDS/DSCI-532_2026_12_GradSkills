@@ -13,7 +13,7 @@ We are building this dashboard for individuals who need to interpret graduate em
 - Career advisors guiding students using outcome-based evidence
 - University administrators assessing program performance
 
-Our role is to translate multi-dimensional employment data into an accessible and interactive visual tool that supports clear comparison and informed decision-making. 
+Our role is to translate multi-dimensional employment data into an accessible and interactive visual tool that supports clear comparison and informed decision-making.
 
 ### Problem
 
@@ -24,11 +24,11 @@ Graduate employment data is inherently multi-dimensional and difficult to interp
 - How have starting salaries evolved over time?
 - Do certain universities consistently demonstrate stronger employment performance?
 
-Without interactive filtering and summarized metrics, extracting these insights requires time-consuming manual analysis and technical expertise that many users do not possess, increasing the likelihood of decisions being made based on incomplete or misinterpreted information. 
+Without interactive filtering and summarized metrics, extracting these insights requires time-consuming manual analysis and technical expertise that many users do not possess, increasing the likelihood of decisions being made based on incomplete or misinterpreted information.
 
 ### Solution
 
-To address this challenge, we propose an interactive dashboard that allows users to dynamically explore employment outcomes through intuitive visualizations and filters. Multi-select dropdowns (Region, Country, Field of Study, Industry) and a graduation year slider enable users to tailor the dataset to their needs. Summary metric cards provide high-level indicators such as 6-month and 12-month employment rates and starting salary statistics. Supporting visualizations, including degree distribution, top industries, top universities, and salary trends over time, enable a thorough comparative analysis. Together, these features allow users to move seamlessly between high-level summaries and detailed comparisons, reducing cognitive overload and enabling evidence-based decision-making. 
+To address this challenge, we propose an interactive dashboard that allows users to dynamically explore employment outcomes through intuitive visualizations and filters. Multi-select dropdowns (Region, Country, Field of Study, Industry) and a graduation year slider enable users to tailor the dataset to their needs. Summary metric cards provide high-level indicators such as 6-month and 12-month employment rates and starting salary statistics. Supporting visualizations, including degree distribution, top industries, top universities, and salary trends over time, enable a thorough comparative analysis. Together, these features allow users to move seamlessly between high-level summaries and detailed comparisons, reducing cognitive overload and enabling evidence-based decision-making.
 
 Ultimately, the goal is to empower users to make informed choices about education pathways, institutional performance, and career planning based on clear, accessible evidence.  
 
@@ -46,7 +46,7 @@ This structure supports our user stories (**USx**) and proposed dashboard intera
 The table below summarizes each variable and how it maps to user tasks and dashboard components.
 
 | Column name | Description | Counts | Relevant info | A description of the variable | Relevance |
-|---|---|---:|---|---|---|
+| --- | --- | ---: | --- | --- | --- |
 | Country | University location country | 3500 | Distinct categories: 21 | Identifies the country where the university is based. | Sidebar geography filter; segmentation for US3/US4 comparisons. |
 | Region | Broad world region | 3500 | Distinct categories: 5 | Groups each record into a global region (e.g., North America, Europe) for regional comparisons. | Primary geography filter; used to contextualize benchmarks (US3/US4). |
 | University_Name | University name | 3500 | Distinct categories: 46 | The institution attended by the graduate; useful for benchmarking outcomes by university. | Powers “Top Universities” ranking/benchmark view (US4). |
@@ -66,14 +66,13 @@ The table below summarizes each variable and how it maps to user tasks and dashb
 | Employer_Reputation_Score (1–100) | Employer reputation score | 3500 | Min: 40.00 • Mean: 69.74 • Median: 70.00 • Max: 100.00 | A score (1–100) reflecting perceived employer reputation/standing relevant to graduate outcomes. | Candidate enhancement for benchmarking/context; supports US4. |
 | Year | Analysis year index | 3500 | Min: 2015.00 • Mean: 2020.02 • Median: 2020.00 • Max: 2025.00 | Duplicates `Graduation_Year` to make time-series analysis and indexing simpler. | Implementation detail; can be dropped/ignored in the app to avoid confusion. |
 
-
 ## Section 3: Research Questions & Usage Scenarios
 
 ### Research Questions
 
 - How do employment rates differ across degree levels within specific fields of study?
 - Which industries employ the largest share of graduates within a selected region and time frame?
-- How have starting salaries evolved over time across fields and regions? 
+- How have starting salaries evolved over time across fields and regions?
 
 ### Persona
 
@@ -81,9 +80,9 @@ Emma is a 22-year-old final-year undergraduate student in Engineering who is con
 
 ### Usage Scenario
 
-Emma accesses the dashboard to explore employment outcomes for Engineering graduates. She filters the data by Region (North America), Field of Study (Engineering), and Graduation Year (2018-2025). The summary cards update to display 6-month and 12-month employment rates and average starting salary. She then examines the degree distribution chart to compare employment representation between Bachelor's and Master's graduates within her field. 
+Emma accesses the dashboard to explore employment outcomes for Engineering graduates. She filters the data by Region (North America), Field of Study (Engineering), and Graduation Year (2018-2025). The summary cards update to display 6-month and 12-month employment rates and average starting salary. She then examines the degree distribution chart to compare employment representation between Bachelor's and Master's graduates within her field.
 
-Next, she explores the salary trend visualization to understand how starting salaries have evolved over time. She also reviews the Top Industries chart to identify which sectors most frequently employ Engineering graduates. By adjusting filters and comparing visual outputs, Emma is able to assess whether pursuing a Master's degree is likely to improve her employment prospects and earning potential. 
+Next, she explores the salary trend visualization to understand how starting salaries have evolved over time. She also reviews the Top Industries chart to identify which sectors most frequently employ Engineering graduates. By adjusting filters and comparing visual outputs, Emma is able to assess whether pursuing a Master's degree is likely to improve her employment prospects and earning potential.
 
 ### User Stories
 
@@ -93,7 +92,7 @@ Next, she explores the salary trend visualization to understand how starting sal
 
 **User Story 3:** As a career advisor, I want to visualize employment rates at both 6 and 12 months so that I can evaluate short-term versus longer-term employment stability for graduates.
 
-**User Story 4:** As a university administrator, I want to view top-performing universities under specific filters so that I can benchmark institutional performance. 
+**User Story 4:** As a university administrator, I want to view top-performing universities under specific filters so that I can benchmark institutional performance.
 
 ## Section 4: Exploratory Data Analysis
 
@@ -102,7 +101,7 @@ Next, she explores the salary trend visualization to understand how starting sal
 Before building the dashboard, we validated that the dataset contains meaningful information in both employment horizons:
 
 | Metric | Mean | Min | Max |
-|---|---:|---:|---:|
+| --- | ---: | ---: | ---: |
 | Employment rate (6 months) | 85.74% | 65.50% | 99.00% |
 | Employment rate (12 months) | 90.41% | 68.00% | 100.00% |
 

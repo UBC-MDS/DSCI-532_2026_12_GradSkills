@@ -4,22 +4,17 @@ Here are the dashboard specs for M2:
 
 ## Job Stories
 
-## Job Stories
-
-| #   | Job Story | Status | Notes |
+| # | Job Story | Status | Notes |
 | --- | --- | --- | --- |
 | 1 | As a prospective graduate student, I want to filter employment outcomes by field of study, degree level, region, country, and graduation year so that I can compare employment rates and salary outcomes across contexts. | 🔄 Revised | Originally focused more narrowly on degree level and field of study in M1. Revised in M2 after implementing a broader filter panel with region, country, industry, degree, and graduation year controls. The current job story reflects the sidebar functionality in the working dashboard while still preserving the original comparison goal. |
 | 2 | As a student exploring job opportunities, I want to compare top industries in my field so that I can target high-demand and high-paying sectors. | ✅ Implemented | Implemented through the dynamic "Top Industries by Average Starting Salary" bar chart. The chart updates based on sidebar filters and university table selection, allowing users to compare salary outcomes across industries within the filtered subset. |
 | 3 | As a career advisor, I want to visualize employment rates at both 6 and 12 months so that I can evaluate short-term versus longer-term employment stability for graduates. | ✅ Implemented | Implemented using summary KPI cards displaying Q1, median, Q3, and mean values for 6-month and 12-month employment rates. These values update based on the active filters and selected universities, allowing focused comparison of short-term versus longer-term outcomes. |
 | 4 | As a university administrator, I want to rank and interactively explore top-performing universities under selected filters so that I can benchmark institutional performance. | 🔄 Revised | Originally described as viewing top-performing universities in a chart. Revised after implementing a ranked DataGrid with row selection. Selecting universities updates downstream views, enabling more detailed benchmarking analysis than the original chart-based idea. |
 
-
-## Component Inventory
-
 ## Component Inventory
 
 | ID | Type | Shiny widget / renderer | Depends on | Job Stories |
-|----|------|-------------------------|------------|-------------|
+| ---- | ------ | ------------------------- | ------------ | ------------- |
 | `region` | Input | `ui.input_checkbox_group()` | - | #1, #2, #3, #4 |
 | `country` | Input | `ui.input_checkbox_group()` | - | #1, #2, #3, #4 |
 | `study` | Input | `ui.input_checkbox_group()` | - | #1, #2, #3, #4 |
@@ -136,7 +131,7 @@ flowchart TD
 - If one or more universities are selected:
   - Maps selected row indices to the corresponding university names in `top_uni`.
   - Filters `filtered_data` to include only those selected universities.
-- Returns a university-filtered subset for downstream visualizations. 
+- Returns a university-filtered subset for downstream visualizations.
 
 **Outputs that consume it:**
 
@@ -161,7 +156,6 @@ flowchart TD
 
 - `industries_bar`
 - `study_salary_plot`
-
 
 ## Complexity Enhancement
 
