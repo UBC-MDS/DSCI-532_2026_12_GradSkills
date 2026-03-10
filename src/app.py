@@ -25,7 +25,6 @@ duckdb.execute(f"""
 con = ibis.duckdb.connect()
 raw_data = con.read_parquet("data/processed/processed_data.parquet")
 
-# raw_data = pd.read_csv("data/processed/processed_data.csv")
 dashboard_description = Path("src/dashboard_description.md").read_text(encoding="utf-8")
 
 
@@ -173,17 +172,7 @@ def render_metric_card(
     """
 
 
-## Preprocess baseline metrics
-
-
-# baseline_data = raw_data.copy()
-# last_year = int(baseline_data["Graduation_Year"].max())
-
-# baseline_data = baseline_data[baseline_data["Graduation_Year"] > last_year - 5]
-
-# emp_6_baseline = baseline_data["Employment_Rate_6_Months (%)"].mean()
-# emp_12_baseline = baseline_data["Employment_Rate_12_Months (%)"].mean()
-# salary_baseline = baseline_data["Average_Starting_Salary_USD"].mean()
+# preprocess baseline metrics
 
 last_year = raw_data.Graduation_Year.max().execute()
 min_year = raw_data.Graduation_Year.min().execute(),
@@ -356,16 +345,6 @@ app_ui = ui.page_navbar(
     ),
     ai_tab_ui(),
     title="Graduate Skills Employability Dashboard",
-    #footer=ui.p(
-    #    (
-    #        "Graduate employability dashboard"
-    #        " | Authors: Wesley Beard, Harrison Li, Hector Palafox Prieto, Apoorva Srivastava |"
-    #        " Repository: https://github.com/UBC-MDS/DSCI-532_2026_12_GradSkills |"
-    #        " Last updated: 2026-02-28"
-    #    ),
-    #    class_="text-center text-muted",
-    #    )
-    #)
 )
 
 
