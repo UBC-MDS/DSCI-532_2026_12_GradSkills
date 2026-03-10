@@ -176,14 +176,24 @@ def render_metric_card(
 ## Preprocess baseline metrics
 
 
-baseline_data = raw_data.copy()
-last_year = int(baseline_data["Graduation_Year"].max())
+# baseline_data = raw_data.copy()
+# last_year = int(baseline_data["Graduation_Year"].max())
 
-baseline_data = baseline_data[baseline_data["Graduation_Year"] > last_year - 5]
+# baseline_data = baseline_data[baseline_data["Graduation_Year"] > last_year - 5]
 
-emp_6_baseline = baseline_data["Employment_Rate_6_Months (%)"].mean()
-emp_12_baseline = baseline_data["Employment_Rate_12_Months (%)"].mean()
-salary_baseline = baseline_data["Average_Starting_Salary_USD"].mean()
+# emp_6_baseline = baseline_data["Employment_Rate_6_Months (%)"].mean()
+# emp_12_baseline = baseline_data["Employment_Rate_12_Months (%)"].mean()
+# salary_baseline = baseline_data["Average_Starting_Salary_USD"].mean()
+
+last_year = raw_data.Graduation_Year.max().execute()
+
+baseline_data = raw_data.filter(
+    _.Graduation_Year > last_year - 5
+)
+
+emp_6_baseline = baseline_data["Employment_Rate_6_Months (%)"].mean().execute()
+emp_12_baseline = baseline_data["Employment_Rate_12_Months (%)"].mean().execute()
+salary_baseline = baseline_data["Average_Starting_Salary_USD"].mean().execute()
 
 
 FOOTER = ui.p(
