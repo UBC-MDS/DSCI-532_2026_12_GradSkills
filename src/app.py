@@ -186,6 +186,8 @@ def render_metric_card(
 # salary_baseline = baseline_data["Average_Starting_Salary_USD"].mean()
 
 last_year = raw_data.Graduation_Year.max().execute()
+min_year = raw_data.Graduation_Year.min().execute(),
+max_year = raw_data.Graduation_Year.max().execute()
 
 baseline_data = raw_data.filter(
     _.Graduation_Year > last_year - 5
@@ -286,11 +288,11 @@ app_ui = ui.page_navbar(
                 ui.input_slider(
                     id="grad_year",
                     label="Graduation Year",
-                    min=raw_data.Graduation_Year.min().execute(),
-                    max=raw_data.Graduation_Year.max().execute(),
+                    min=min_year,
+                    max=max_year,
                     value=[
-                        raw_data.Graduation_Year.max().execute() - 4,
-                        raw_data.Graduation_Year.max().execute(),
+                        max_year - 4,
+                        max_year,
                     ],
                     step=1,
                     ticks=True,
