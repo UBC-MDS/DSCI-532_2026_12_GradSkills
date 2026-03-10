@@ -286,11 +286,11 @@ app_ui = ui.page_navbar(
                 ui.input_slider(
                     id="grad_year",
                     label="Graduation Year",
-                    min=raw_data["Graduation_Year"].min(),
-                    max=raw_data["Graduation_Year"].max(),
+                    min=raw_data.Graduation_Year.min().execute(),
+                    max=raw_data.Graduation_Year.max().execute(),
                     value=[
-                        raw_data["Graduation_Year"].max() - 4,
-                        raw_data["Graduation_Year"].max(),
+                        raw_data.Graduation_Year.max().execute() - 4,
+                        raw_data.Graduation_Year.max().execute(),
                     ],
                     step=1,
                     ticks=True,
