@@ -175,7 +175,7 @@ def render_metric_card(
 # preprocess baseline metrics
 
 last_year = raw_data.Graduation_Year.max().execute()
-min_year = raw_data.Graduation_Year.min().execute(),
+min_year = raw_data.Graduation_Year.min().execute()
 max_year = raw_data.Graduation_Year.max().execute()
 
 baseline_data = raw_data.filter(
