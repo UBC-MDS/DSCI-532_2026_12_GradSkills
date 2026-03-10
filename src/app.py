@@ -539,7 +539,7 @@ def server(input, output, session):
     def update_countries_by_region():
         filtered_by_region = raw_data[raw_data["Region"].isin(input.region())]
 
-        countries = sorted(filtered_by_region["Country"].dropna().unique().tolist())
+        #countries = sorted(filtered_by_region["Country"].dropna().unique().tolist())
 
         ui.update_checkbox_group(
             id="country",
@@ -804,7 +804,7 @@ def server(input, output, session):
         if input.country_all():
             ui.update_checkbox_group(
                 "country",
-                selected=raw_data["Country"].dropna().unique().tolist()
+                selected=countries
             )
         else:
             ui.update_checkbox_group(
