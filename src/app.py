@@ -231,8 +231,8 @@ app_ui = ui.page_navbar(
                             ui.input_checkbox_group(
                                 id="country",
                                 label=None,
-                                choices=[],
-                                selected=[],
+                                choices=countries,
+                                selected=countries,
                             )
                         ),
                     ),
