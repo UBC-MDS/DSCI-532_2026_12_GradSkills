@@ -29,10 +29,23 @@ raw_data = con.read_parquet("data/processed/processed_data.parquet")
 dashboard_description = Path("src/dashboard_description.md").read_text(encoding="utf-8")
 
 
-regions = sorted(raw_data["Region"].dropna().unique().tolist())
-studies = sorted(raw_data["Field_of_Study"].dropna().unique().tolist())
-industries = sorted(raw_data["Top_Industry"].dropna().unique().tolist())
-degrees = sorted(raw_data["Degree_Level"].dropna().unique().tolist())
+def unique_values(col):
+    """Returns the distinct values from a columnn of interest from a parquet format."""
+    return (
+        raw_data.filter(_[col].notnull())
+        .select(col)
+        .distinct()
+        .execute()[col]
+        .sort_values()
+        .tolist()
+    )
+
+
+regions = unique_values("Region")
+studies = unique_values("Field_of_Study")
+industries = unique_values("Top_Industry")
+degrees = unique_values("Degree_Level")
+countries = unique_values("Country")
 
 def render_metric_card(
     title,
