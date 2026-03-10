@@ -8,10 +8,24 @@ from shinywidgets import render_altair, render_widget, output_widget
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent))
 from ai_tab import ai_tab_ui, ai_tab_server
+import ibis
+from ibis import _
+import duckdb
 
 load_dotenv(Path(__file__).parent.parent / ".env")
 
-raw_data = pd.read_csv("data/processed/processed_data.csv")
+CSV = "data/processed/processed_data.csv"
+OUT = "data/processed/processed_data.parquet"
+
+duckdb.execute(f"""
+    COPY (SELECT * FROM read_csv_auto('{CSV}'))
+    TO '{OUT}' (FORMAT PARQUET)
+""")
+
+con = ibis.duckdb.connect()
+raw_data = con.read_parquet("data/processed/processed_data.parquet")
+
+# raw_data = pd.read_csv("data/processed/processed_data.csv")
 dashboard_description = Path("src/dashboard_description.md").read_text(encoding="utf-8")
 
 
