@@ -417,11 +417,12 @@ def server(input, output, session):
         ui.update_slider(
             "grad_year",
             value=[
-                int(raw_data["Graduation_Year"].max() - 4),
-                int(raw_data["Graduation_Year"].max()),
+                raw_data.Graduation_Year.max().execute() - 4,
+                raw_data.Graduation_Year.max().execute(),
             ],
         )
         ui.update_checkbox_group("region", choices=regions, selected=regions)
+        ui.update_checkbox_group("country", choices=countries, selected=countries)
         ui.update_checkbox_group("study", choices=studies, selected=studies)
         ui.update_checkbox_group("industry", choices=industries, selected=industries)
         ui.update_checkbox_group("degree", choices=degrees, selected=degrees)
@@ -429,21 +430,20 @@ def server(input, output, session):
     @reactive.calc
     def filtered_data():
         _ = input.reset_btn()
-        df = raw_data.copy()
 
-        # filters
-        idx0 = df["Graduation_Year"].between(
-            left=input.grad_year()[0],
-            right=input.grad_year()[1],
-            inclusive="both",
-        )
-        idx1 = df["Region"].isin(input.region())
-        idx2 = df["Country"].isin(input.country())
-        idx3 = df["Field_of_Study"].isin(input.study())
-        idx4 = df["Top_Industry"].isin(input.industry())
-        idx5 = df["Degree_Level"].isin(input.degree())
+        return raw_data.filter([
+            _.Graduation_Year.between(
+                input.grad_year()[0],
+                input.grad_year()[1],
+                include_bounds=True
+            ),
+            _.Region.isin(input.region()),
+            _.Country.isin(input.country()),
+            _.Field_of_Study.isin(input.study()),
+            _.Top_Industry.isin(input.industry()),
+            _.Degree_Level.isin(input.degree()),
+        ])
 
-        return df[idx0 & idx1 & idx2 & idx3 & idx4 & idx5]
 
     @render.ui
     def emp_rate_6():
