@@ -410,7 +410,7 @@ def server(input, output, session):
 
     @reactive.calc
     def filtered_data():
-        _ = input.reset_btn()
+        #_ = input.reset_btn()
 
         return raw_data.filter([
             _.Graduation_Year.between(
