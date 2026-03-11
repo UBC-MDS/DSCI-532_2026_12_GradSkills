@@ -628,7 +628,6 @@ def server(input, output, session):
                     title="Average Starting Salary (USD)",
                     axis=alt.Axis(format="$,.0f"),
                 ),
-                color=alt.Color("Top_Industry:N", title="Industry", legend=None),
                 tooltip=[
                     alt.Tooltip("rank:Q", title="Rank"),
                     alt.Tooltip("Top_Industry:N", title="Industry"),
