@@ -16,7 +16,11 @@ import pandas as pd
 # Shiny-related imports
 from shiny import App, render, ui, reactive, req
 from shinywidgets import render_altair, render_widget, output_widget
-from ai_tab import ai_tab_ui, ai_tab_server
+
+try:
+    from .ai_tab import ai_tab_ui, ai_tab_server # Posit deployment
+except ImportError:
+    from ai_tab import ai_tab_ui, ai_tab_server # To run code locally
 
 sys.path.insert(0, str(Path(__file__).parent))
 
