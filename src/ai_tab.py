@@ -4,29 +4,39 @@ AI Assistant Tab for the Graduate Skills Employability Dashboard.
 This module contains the querychat-powered AI tab which allows users to
 filter the graduate employability dataset using natural language queries.
 
-Setup: 
+Setup:
 Requires a .env file in the project root with the following key:
     GITHUB_TOKEN=your_github_token_here
 """
 
-
+# Standard imports
 from pathlib import Path
-from shiny import ui, render
-import querychat
+import sys
+
+# Third-party imports
+import altair as alt
 from chatlas import ChatGithub
 from dotenv import load_dotenv
+import duckdb
+import ibis
+from ibis import _
+import numpy as np
 import pandas as pd
-import altair as alt
+import querychat
+
+# Shiny-related imports
+from shiny import App, render, ui, reactive, req
 from shinywidgets import render_altair, render_widget, output_widget
 
 # Load API keys from .env (project root)
 # .env should exist at the root of the directory, not inside src/
 load_dotenv(Path(__file__).parent.parent / ".env")
 
-raw_data = pd.read_csv("data/processed/processed_data.csv")
+con = ibis.duckdb.connect()
+raw_data = con.read_parquet("data/processed/processed_data.parquet")
 
 qc = querychat.QueryChat(
-    raw_data.copy(),
+    raw_data.execute(),
     "graduate_employability",
     greeting="""👋 Ask me anything about graduate employability.
 
@@ -66,6 +76,7 @@ FOOTER = ui.p(
     " Last updated: 2026-03-05",
     class_="text-center text-muted",
 )
+
 
 def ai_tab_ui():
     """
