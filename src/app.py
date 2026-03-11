@@ -20,9 +20,9 @@ from shiny import App, render, ui, reactive, req
 from shinywidgets import render_altair, render_widget, output_widget
 
 try:
-    from .ai_tab import ai_tab_ui, ai_tab_server # Posit deployment
+    from .ai_tab import ai_tab_ui, ai_tab_server  # Posit deployment
 except ImportError:
-    from ai_tab import ai_tab_ui, ai_tab_server # To run code locally
+    from ai_tab import ai_tab_ui, ai_tab_server  # To run code locally
 
 
 load_dotenv(Path(__file__).parent.parent / ".env")
@@ -30,10 +30,12 @@ load_dotenv(Path(__file__).parent.parent / ".env")
 CSV = "data/processed/processed_data.csv"
 OUT = "data/processed/processed_data.parquet"
 
-duckdb.execute(f"""
+duckdb.execute(
+    f"""
     COPY (SELECT * FROM read_csv_auto('{CSV}'))
     TO '{OUT}' (FORMAT PARQUET)
-""")
+"""
+)
 
 con = ibis.duckdb.connect()
 raw_data = con.read_parquet("data/processed/processed_data.parquet")
@@ -72,7 +74,7 @@ def render_metric_card(
     threshold_pct=1.0,
     comparison_label="Global Last 5 Years",
     font_scale=0.75,
-    spacing_scale=0.72,   # controls padding / margins / gaps
+    spacing_scale=0.72,  # controls padding / margins / gaps
 ):
     def fmt(x):
         if pd.isna(x):
@@ -105,7 +107,7 @@ def render_metric_card(
             delta_line_1 = f"↓ {delta_pct:+.0f}% vs {comparison_label}"
             delta_line_2 = f"({fmt(baseline)})"
 
-# Then again, I asked ChatGPT to help me with this HTML formatting.
+    # Then again, I asked ChatGPT to help me with this HTML formatting.
 
     return f"""
         <div style="
@@ -192,9 +194,7 @@ last_year = raw_data.Graduation_Year.max().execute()
 min_year = raw_data.Graduation_Year.min().execute()
 max_year = raw_data.Graduation_Year.max().execute()
 
-baseline_data = raw_data.filter(
-    _.Graduation_Year > last_year - 5
-)
+baseline_data = raw_data.filter(_.Graduation_Year > last_year - 5)
 
 emp_6_baseline = baseline_data["Employment_Rate_6_Months (%)"].mean().execute()
 emp_12_baseline = baseline_data["Employment_Rate_12_Months (%)"].mean().execute()
@@ -215,11 +215,9 @@ app_ui = ui.page_navbar(
         ui.accordion(
             ui.accordion_panel(
                 "Click to learn more about this dashboard.",
-                ui.card(
-                    ui.markdown(dashboard_description)
-                ),
+                ui.card(ui.markdown(dashboard_description)),
             ),
-            open=False
+            open=False,
         ),
         ui.layout_sidebar(
             ui.sidebar(
@@ -235,7 +233,7 @@ app_ui = ui.page_navbar(
                                 label=None,
                                 choices=regions,
                                 selected=regions,
-                            )
+                            ),
                         ),
                     ),
                     ui.accordion_panel(
@@ -247,7 +245,7 @@ app_ui = ui.page_navbar(
                                 label=None,
                                 choices=countries,
                                 selected=countries,
-                            )
+                            ),
                         ),
                     ),
                     ui.accordion_panel(
@@ -259,7 +257,7 @@ app_ui = ui.page_navbar(
                                 label=None,
                                 choices=studies,
                                 selected=studies,
-                            )
+                            ),
                         ),
                     ),
                     ui.accordion_panel(
@@ -282,11 +280,11 @@ app_ui = ui.page_navbar(
                                 label=None,
                                 choices=industries,
                                 selected=industries,
-                            )
+                            ),
                         ),
                     ),
                     id="sidebar_panels",
-                    open=False
+                    open=False,
                 ),
                 ui.input_slider(
                     id="grad_year",
@@ -301,7 +299,7 @@ app_ui = ui.page_navbar(
                     ticks=True,
                     sep="",
                 ),
-                width=300
+                width=300,
             ),
             ui.layout_columns(
                 ui.output_ui("emp_rate_6"),
@@ -312,7 +310,9 @@ app_ui = ui.page_navbar(
             ui.layout_columns(
                 ui.card(
                     ui.card_header("Top Universities"),
-                    ui.input_action_button("clear_uni_selection", "Clear selected rows"),
+                    ui.input_action_button(
+                        "clear_uni_selection", "Clear selected rows"
+                    ),
                     ui.output_data_frame("university_table"),
                     full_screen=True,
                 ),
@@ -323,7 +323,9 @@ app_ui = ui.page_navbar(
                         full_screen=True,
                     ),
                     ui.card(
-                        ui.card_header("Yearly Starting Salary for each Field of Study"),
+                        ui.card_header(
+                            "Yearly Starting Salary for each Field of Study"
+                        ),
                         output_widget("study_salary_plot"),
                         full_screen=True,
                     ),
@@ -350,7 +352,7 @@ app_ui = ui.page_navbar(
                             output_widget("uni_salary"),
                             full_screen=True,
                         ),
-                    )
+                    ),
                 )
             ),
         ),
@@ -372,19 +374,21 @@ def server(input, output, session):
 
         plot_data = (
             data_source[["University_Name", "Country", "Region", col]]
-                .groupby(["University_Name", "Country", "Region"], as_index=False)
-                .agg(avg_col=(col, "mean"))
+            .groupby(["University_Name", "Country", "Region"], as_index=False)
+            .agg(avg_col=(col, "mean"))
         )
 
         selected_rows = list(input.university_table_selected_rows() or [])
 
         if not selected_rows:
-            plot_data = pd.DataFrame({
-                "University_Name": ["All"],
-                "Country": ["All"],
-                "Region": ["All"],
-                "avg_col": [data_source[col].mean()]
-            })
+            plot_data = pd.DataFrame(
+                {
+                    "University_Name": ["All"],
+                    "Country": ["All"],
+                    "Region": ["All"],
+                    "avg_col": [data_source[col].mean()],
+                }
+            )
 
         req(not plot_data.empty, cancel_output=True)
 
@@ -399,7 +403,9 @@ def server(input, output, session):
                     alt.Tooltip("University_Name", title="University"),
                     alt.Tooltip("Country", title="Country"),
                     alt.Tooltip("Region", title="Region"),
-                    alt.Tooltip("avg_col" + col_style, title=col_title, format=col_format),
+                    alt.Tooltip(
+                        "avg_col" + col_style, title=col_title, format=col_format
+                    ),
                 ],
             )
             .properties(width="container", height="container", title="")
@@ -425,17 +431,16 @@ def server(input, output, session):
     def filtered_data():
         input.reset_btn()
 
-        return raw_data.filter([
-            _.Graduation_Year.between(
-                input.grad_year()[0],
-                input.grad_year()[1]
-            ),
-            _.Region.isin(input.region()),
-            _.Country.isin(input.country()),
-            _.Field_of_Study.isin(input.study()),
-            _.Top_Industry.isin(input.industry()),
-            _.Degree_Level.isin(input.degree()),
-        ])
+        return raw_data.filter(
+            [
+                _.Graduation_Year.between(input.grad_year()[0], input.grad_year()[1]),
+                _.Region.isin(input.region()),
+                _.Country.isin(input.country()),
+                _.Field_of_Study.isin(input.study()),
+                _.Top_Industry.isin(input.industry()),
+                _.Degree_Level.isin(input.degree()),
+            ]
+        )
 
     @reactive.calc
     def display_data():
@@ -657,7 +662,7 @@ def server(input, output, session):
 
         ymin, ymax = (
             salary_over_time["avg_salary"].min() * 0.95,
-            salary_over_time["avg_salary"].max() * 1.05
+            salary_over_time["avg_salary"].max() * 1.05,
         )
 
         line_chart = (
@@ -674,11 +679,7 @@ def server(input, output, session):
                 color=alt.Color(
                     "Field_of_Study:N",
                     title="Field of Study",
-                    legend=alt.Legend(
-                        orient="top",
-                        direction="horizontal",
-                        columns=3
-                    )
+                    legend=alt.Legend(orient="top", direction="horizontal", columns=3),
                 ),
                 opacity=alt.condition(highlight, alt.value(1), alt.value(0.12)),
                 tooltip=[
@@ -733,114 +734,71 @@ def server(input, output, session):
     @reactive.event(input.sidebar_switch)
     def switch_logic():
         if input.sidebar_switch():
-            ui.update_accordion(
-                "sidebar_panels",
-                show=True
-            )
+            ui.update_accordion("sidebar_panels", show=True)
         else:
-            ui.update_accordion(
-                "sidebar_panels",
-                show=False
-            )
+            ui.update_accordion("sidebar_panels", show=False)
 
-# aware that this code needs to be refactored, however,
-# wanted concepted to be available on dashboard
+    # aware that this code needs to be refactored, however,
+    # wanted concepted to be available on dashboard
+    def _update_checkbox_group(select_all_input, checkbox_input, checkbox_id, choices):
+        # select all
+        if select_all_input:
+            return ui.update_checkbox_group(checkbox_id, selected=choices)
+        # deselect all if and only if all checkboxes are selected
+        elif set(checkbox_input) == set(choices):
+            return ui.update_checkbox_group(checkbox_id, selected=[])
+
+    def _select_all_checkbox(checkbox_input, select_all_id, choices):
+        if checkbox_input:
+            # update select all checkbox based on checkbox groups
+            if set(checkbox_input) == set(choices):
+                return ui.update_checkbox(select_all_id, value=True)
+            else:
+                return ui.update_checkbox(select_all_id, value=False)
 
     # region
     @reactive.effect
     @reactive.event(input.region_all)
     def region_event_all():
-        if input.region_all():
-            ui.update_checkbox_group(
-                "region",
-                selected=regions
-            )
-        else:
-            ui.update_checkbox_group(
-                "region",
-                selected=[]
-            )
+        _update_checkbox_group(input.region_all(), "region", regions)
 
     @reactive.effect
     @reactive.event(input.region)
     def region_select_all():
-        if set(input.region()) == set(regions):
-            ui.update_checkbox(
-                "region_all",
-                value=True
-            )
+        _select_all_checkbox(input.region(), "region_all", regions)
 
     # country
     @reactive.effect
     @reactive.event(input.country_all)
     def country_event_all():
-        if input.country_all():
-            ui.update_checkbox_group(
-                "country",
-                selected=countries
-            )
-        else:
-            ui.update_checkbox_group(
-                "country",
-                selected=[]
-            )
+        _update_checkbox_group(input.country_all(), "country", countries)
 
     @reactive.effect
     @reactive.event(input.country)
     def country_select_all():
-        if set(input.country()) == set(countries):
-            ui.update_checkbox(
-                "country_all",
-                value=True
-            )
+        _select_all_checkbox(input.country(), "country_all", countries)
 
     # study
     @reactive.effect
     @reactive.event(input.study_all)
     def study_event_all():
-        if input.study_all():
-            ui.update_checkbox_group(
-                "study",
-                selected=studies
-            )
-        else:
-            ui.update_checkbox_group(
-                "study",
-                selected=[]
-            )
+        _update_checkbox_group(input.study_all(), "study", studies)
 
     @reactive.effect
     @reactive.event(input.study)
     def study_select_all():
-        if set(input.study()) == set(studies):
-            ui.update_checkbox(
-                "study_all",
-                value=True
-            )
+        _select_all_checkbox(input.study(), "study_all", studies)
 
     # industry
     @reactive.effect
     @reactive.event(input.industry_all)
     def industry_event_all():
-        if input.industry_all():
-            ui.update_checkbox_group(
-                "industry",
-                selected=industries
-            )
-        else:
-            ui.update_checkbox_group(
-                "industry",
-                selected=[]
-            )
+        _update_checkbox_group(input.industry_all(), "industry", industries)
 
     @reactive.effect
     @reactive.event(input.industry)
     def industry_select_all():
-        if set(input.industry()) == set(industries):
-            ui.update_checkbox(
-                "industry_all",
-                value=True
-            )
+        _select_all_checkbox(input.industry(), "industry_all", industries)
 
 
 app = App(app_ui, server)
