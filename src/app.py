@@ -760,7 +760,7 @@ def server(input, output, session):
     @reactive.effect
     @reactive.event(input.region_all)
     def region_event_all():
-        _update_checkbox_group(input.region_all(), "region", regions)
+        _update_checkbox_group(input.region_all(), input.region(), "region", regions)
 
     @reactive.effect
     @reactive.event(input.region)
@@ -771,7 +771,7 @@ def server(input, output, session):
     @reactive.effect
     @reactive.event(input.country_all)
     def country_event_all():
-        _update_checkbox_group(input.country_all(), "country", countries)
+        _update_checkbox_group(input.country_all(), input.country(), "country", countries)
 
     @reactive.effect
     @reactive.event(input.country)
@@ -782,7 +782,7 @@ def server(input, output, session):
     @reactive.effect
     @reactive.event(input.study_all)
     def study_event_all():
-        _update_checkbox_group(input.study_all(), "study", studies)
+        _update_checkbox_group(input.study_all(), input.study(), "study", studies)
 
     @reactive.effect
     @reactive.event(input.study)
@@ -793,7 +793,7 @@ def server(input, output, session):
     @reactive.effect
     @reactive.event(input.industry_all)
     def industry_event_all():
-        _update_checkbox_group(input.industry_all(), "industry", industries)
+        _update_checkbox_group(input.industry_all(), input.industry(), "industry", industries)
 
     @reactive.effect
     @reactive.event(input.industry)
