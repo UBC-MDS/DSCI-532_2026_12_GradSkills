@@ -2,6 +2,63 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.4.0] - 2026-03-17
+
+### Added
+
+- Added packages to requirements.txt for lazy loading (ibis and DuckDB). @beardw
+
+- <!-- New features, components, tests - one line each. Reference PRs where relevant (e.g. #12). -->
+
+### Changed
+
+- Updated app.py to lazy loading using parquet and DuckDB @beardw
+- Refactored several parts of the codebase to account for parquet formatting of data. @beardw
+- Updated ai_tab.py to lazy loading using parquet and DuckDB @beardw
+
+- <!-- Spec or design deviations, and motivation. -->
+- <!-- Feedback items you addressed: "Addressed: <item description> (#<prioritization issue>) via #<PR>" -->
+
+### Fixed
+
+- Corrected any assignment of the underscore character that interferred with ibis capabilities. @beardw
+
+- **Feedback prioritization issue link:** #...
+
+### Known Issues
+
+- <!-- Anything incomplete or broken TAs should be aware of (so it isn't mistaken for unfinished work). -->
+
+### Release Highlight: [Name of your advanced feature]
+
+<!-- One short paragraph describing what you built and what it does for the user. -->
+
+- **Option chosen:** D - Please note that this was completed during Milestone 3. We confirmed with Ilya that
+this was alright. You'll note that this was the hard suggestion from the TA feedback linked below. We extended
+the suggestion to make our table multi-select and update other outputs.
+- **PR:** #65
+- **Why this option over the others:** This was feedback provided by the TA. We also thought it aligns well with
+our user stories where they may want to only select a subset of universities and compare them directly.
+- **Feature prioritization issue link:** [https://github.com/UBC-MDS/DSCI-532_2026_12_GradSkills/issues/61](https://github.com/UBC-MDS/DSCI-532_2026_12_GradSkills/issues/61)
+
+### Collaboration
+
+<!-- Summary of workflow or collaboration improvements made since M3. -->
+
+- **CONTRIBUTING.md:** <!-- Link to the PR that updated it with your M3 retrospective and M4 norms. -->
+- **M3 retrospective:** <!-- What changed in your workflow after M3 collaboration feedback. -->
+- **M4:** <!-- What you tried or improved this milestone. -->
+
+### Reflection
+
+<!-- Standard (see General Guidelines): what the dashboard does well, current limitations,
+     any intentional deviations from DSCI 531 visualization best practices. -->
+
+<!-- Trade-offs: one sentence on feedback prioritization - full rationale is in #<issue> and ### Changed above. -->
+
+<!-- Most useful: which lecture, material, or feedback shaped your work most this milestone,
+     and anything you wish had been covered. -->
+
 ## [0.3.0] - 2026-03-08
 
 ### [0.3.0] Added
