@@ -1,4 +1,4 @@
-"""Main file for the graduate skills employability dashboard."""
+"""Main file for the Graduate Skills Employability Dashboard."""
 
 # Standard imports
 from pathlib import Path
