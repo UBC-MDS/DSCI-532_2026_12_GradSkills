@@ -1,16 +1,24 @@
+"""Main file for the graduate skills employability dashboard."""
+
+# Standard imports
+from pathlib import Path
 import sys
-import numpy as np
-import pandas as pd
+
+# Third-party imports
 import altair as alt
 from dotenv import load_dotenv
-from shiny import App, render, ui, reactive, req
-from shinywidgets import render_altair, render_widget, output_widget
-from pathlib import Path
-sys.path.insert(0, str(Path(__file__).parent))
-from ai_tab import ai_tab_ui, ai_tab_server
+import duckdb
 import ibis
 from ibis import _
-import duckdb
+import numpy as np
+import pandas as pd
+
+# Shiny-related imports
+from shiny import App, render, ui, reactive, req
+from shinywidgets import render_altair, render_widget, output_widget
+from ai_tab import ai_tab_ui, ai_tab_server
+
+sys.path.insert(0, str(Path(__file__).parent))
 
 load_dotenv(Path(__file__).parent.parent / ".env")
 
@@ -45,6 +53,7 @@ studies = unique_values("Field_of_Study")
 industries = unique_values("Top_Industry")
 degrees = unique_values("Degree_Level")
 countries = unique_values("Country")
+
 
 def render_metric_card(
     title,
@@ -91,7 +100,7 @@ def render_metric_card(
             delta_line_1 = f"↓ {delta_pct:+.0f}% vs {comparison_label}"
             delta_line_2 = f"({fmt(baseline)})"
 
-    ### Then again, I asked ChatGPT to help me with this HTML formatting.
+# Then again, I asked ChatGPT to help me with this HTML formatting.
 
     return f"""
         <div style="
@@ -341,7 +350,7 @@ app_ui = ui.page_navbar(
                 )
             ),
         ),
-        FOOTER, 
+        FOOTER,
     ),
     ai_tab_ui(),
     title="Graduate Skills Employability Dashboard",
@@ -415,8 +424,7 @@ def server(input, output, session):
         return raw_data.filter([
             _.Graduation_Year.between(
                 input.grad_year()[0],
-                input.grad_year()[1],
-                #include_bounds=True
+                input.grad_year()[1]
             ),
             _.Region.isin(input.region()),
             _.Country.isin(input.country()),
@@ -427,7 +435,7 @@ def server(input, output, session):
 
     @reactive.calc
     def display_data():
-        data = filtered_data().execute() #filter_data_by_university()
+        data = filtered_data().execute()
         req(not data.empty, cancel_output=True)
         return data
 
@@ -520,22 +528,9 @@ def server(input, output, session):
             )
         )
 
-    # @reactive.effect
-    # @reactive.event(input.region, input.reset_btn)
-    # def update_countries_by_region():
-    #     filtered_by_region = raw_data[raw_data["Region"].isin(input.region())]
-
-    #     #countries = sorted(filtered_by_region["Country"].dropna().unique().tolist())
-
-    #     ui.update_checkbox_group(
-    #         id="country",
-    #         choices=countries,
-    #         selected=countries,  # select all in these regions
-    #     )
-
     @reactive.calc
     def top_uni():
-        data = display_data() # filter_data_by_university() #   filtered_data().execute()
+        data = display_data()
 
         uni_emp_summary: pd.DataFrame = data.groupby(
             ["University_Name", "Region", "Country"], as_index=False
@@ -569,7 +564,7 @@ def server(input, output, session):
 
     @reactive.calc
     def filter_data_by_university():
-        data = display_data() #filtered_data().execute()
+        data = display_data()
 
         if data.empty:
             return data
@@ -591,8 +586,6 @@ def server(input, output, session):
 
     @render.data_frame
     def university_table():
-
-        # _ = input.clear_uni_selection()
         input.clear_uni_selection()
 
         table_display = top_uni()[["rank", "University_Name", "mean_overall"]].copy()
@@ -659,12 +652,10 @@ def server(input, output, session):
 
         highlight = alt.selection_point(fields=["Field_of_Study"], bind="legend")
 
-        
         ymin, ymax = (
             salary_over_time["avg_salary"].min() * 0.95,
             salary_over_time["avg_salary"].max() * 1.05
         )
-        
 
         line_chart = (
             alt.Chart(salary_over_time)
@@ -704,7 +695,7 @@ def server(input, output, session):
         )
 
         return line_chart
-    
+
     @render_altair
     def uni_emp_rate_6():
 
@@ -714,7 +705,7 @@ def server(input, output, session):
         col_format = ".2f"
 
         return generate_uni_plot(col, col_title, col_style, col_format)
-    
+
     @render_altair
     def uni_emp_rate_12():
 
@@ -723,8 +714,8 @@ def server(input, output, session):
         col_style = ":Q"
         col_format = ".2f"
 
-        return generate_uni_plot(col, col_title, col_style, col_format)     
-    
+        return generate_uni_plot(col, col_title, col_style, col_format)
+
     @render_altair
     def uni_salary():
 
@@ -733,7 +724,7 @@ def server(input, output, session):
         col_style = ":Q"
         col_format = "$,.2f"
 
-        return generate_uni_plot(col, col_title, col_style, col_format)    
+        return generate_uni_plot(col, col_title, col_style, col_format)
 
     @reactive.effect
     @reactive.event(input.sidebar_switch)
@@ -749,8 +740,8 @@ def server(input, output, session):
                 show=False
             )
 
-    # # # aware that this code needs to be refactored, however,
-    # # # wanted concepted to be available on dashboard
+# aware that this code needs to be refactored, however,
+# wanted concepted to be available on dashboard
 
     # region
     @reactive.effect
