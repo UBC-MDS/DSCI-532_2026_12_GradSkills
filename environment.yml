@@ -16,3 +16,7 @@ dependencies:
     - querychat
     - chatlas
     - python-dotenv
+    - ibis-framework
+    - pyarrow-hotfix
+    - pyarrow
+    - duckdb
