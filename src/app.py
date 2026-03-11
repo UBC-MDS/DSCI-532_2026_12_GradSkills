@@ -4,6 +4,8 @@
 from pathlib import Path
 import sys
 
+sys.path.insert(0, str(Path(__file__).parent))
+
 # Third-party imports
 import altair as alt
 from dotenv import load_dotenv
@@ -22,7 +24,6 @@ try:
 except ImportError:
     from ai_tab import ai_tab_ui, ai_tab_server # To run code locally
 
-sys.path.insert(0, str(Path(__file__).parent))
 
 load_dotenv(Path(__file__).parent.parent / ".env")
 
