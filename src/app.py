@@ -299,7 +299,6 @@ app_ui = ui.page_navbar(
                     ],
                     step=1,
                     ticks=True,
-                    animate=True,
                     sep="",
                 ),
                 width=300
