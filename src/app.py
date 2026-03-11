@@ -410,13 +410,13 @@ def server(input, output, session):
 
     @reactive.calc
     def filtered_data():
-        #_ = input.reset_btn()
+        input.reset_btn()
 
         return raw_data.filter([
             _.Graduation_Year.between(
                 input.grad_year()[0],
                 input.grad_year()[1],
-                include_bounds=True
+                #include_bounds=True
             ),
             _.Region.isin(input.region()),
             _.Country.isin(input.country()),
@@ -425,6 +425,11 @@ def server(input, output, session):
             _.Degree_Level.isin(input.degree()),
         ])
 
+    @reactive.calc
+    def display_data():
+        data = filtered_data().execute() #filter_data_by_university()
+        req(not data.empty, cancel_output=True)
+        return data
 
     @render.ui
     def emp_rate_6():
@@ -515,22 +520,22 @@ def server(input, output, session):
             )
         )
 
-    @reactive.effect
-    @reactive.event(input.region, input.reset_btn)
-    def update_countries_by_region():
-        filtered_by_region = raw_data[raw_data["Region"].isin(input.region())]
+    # @reactive.effect
+    # @reactive.event(input.region, input.reset_btn)
+    # def update_countries_by_region():
+    #     filtered_by_region = raw_data[raw_data["Region"].isin(input.region())]
 
-        #countries = sorted(filtered_by_region["Country"].dropna().unique().tolist())
+    #     #countries = sorted(filtered_by_region["Country"].dropna().unique().tolist())
 
-        ui.update_checkbox_group(
-            id="country",
-            choices=countries,
-            selected=countries,  # select all in these regions
-        )
+    #     ui.update_checkbox_group(
+    #         id="country",
+    #         choices=countries,
+    #         selected=countries,  # select all in these regions
+    #     )
 
     @reactive.calc
     def top_uni():
-        data = filtered_data()
+        data = display_data() # filter_data_by_university() #   filtered_data().execute()
 
         uni_emp_summary: pd.DataFrame = data.groupby(
             ["University_Name", "Region", "Country"], as_index=False
@@ -564,7 +569,7 @@ def server(input, output, session):
 
     @reactive.calc
     def filter_data_by_university():
-        data = filtered_data()
+        data = display_data() #filtered_data().execute()
 
         if data.empty:
             return data
@@ -587,7 +592,8 @@ def server(input, output, session):
     @render.data_frame
     def university_table():
 
-        _ = input.clear_uni_selection()
+        # _ = input.clear_uni_selection()
+        input.clear_uni_selection()
 
         table_display = top_uni()[["rank", "University_Name", "mean_overall"]].copy()
         table_display.columns = ["Rank", "Name", "Mean Employment Rate (%)"]
@@ -599,7 +605,7 @@ def server(input, output, session):
 
     @render_altair
     def industries_bar():
-        data = display_data()
+        data = filter_data_by_university()
 
         industry_salary = data.groupby("Top_Industry", as_index=False).agg(
             avg_salary=("Average_Starting_Salary_USD", "mean")
@@ -645,7 +651,7 @@ def server(input, output, session):
 
     @render_altair
     def study_salary_plot():
-        data = display_data()
+        data = filter_data_by_university()
 
         salary_over_time = data.groupby(
             ["Graduation_Year", "Field_of_Study"], as_index=False
@@ -708,8 +714,6 @@ def server(input, output, session):
         col_format = ".2f"
 
         return generate_uni_plot(col, col_title, col_style, col_format)
-
-                
     
     @render_altair
     def uni_emp_rate_12():
@@ -731,15 +735,9 @@ def server(input, output, session):
 
         return generate_uni_plot(col, col_title, col_style, col_format)    
 
-    @reactive.calc
-    def display_data():
-        data = filter_data_by_university()
-        req(not data.empty, cancel_output=True)
-        return data
-
     @reactive.effect
     @reactive.event(input.sidebar_switch)
-    def _():
+    def switch_logic():
         if input.sidebar_switch():
             ui.update_accordion(
                 "sidebar_panels",
@@ -751,13 +749,13 @@ def server(input, output, session):
                 show=False
             )
 
-    # # aware that this code needs to be refactored, however,
-    # # wanted concepted to be available on dashboard
+    # # # aware that this code needs to be refactored, however,
+    # # # wanted concepted to be available on dashboard
 
     # region
     @reactive.effect
     @reactive.event(input.region_all)
-    def _():
+    def region_event_all():
         if input.region_all():
             ui.update_checkbox_group(
                 "region",
@@ -771,7 +769,7 @@ def server(input, output, session):
 
     @reactive.effect
     @reactive.event(input.region)
-    def _():
+    def region_select_all():
         if set(input.region()) == set(regions):
             ui.update_checkbox(
                 "region_all",
@@ -781,7 +779,7 @@ def server(input, output, session):
     # country
     @reactive.effect
     @reactive.event(input.country_all)
-    def _():
+    def country_event_all():
         if input.country_all():
             ui.update_checkbox_group(
                 "country",
@@ -795,8 +793,8 @@ def server(input, output, session):
 
     @reactive.effect
     @reactive.event(input.country)
-    def _():
-        if set(input.country()) == set(regions):
+    def country_select_all():
+        if set(input.country()) == set(countries):
             ui.update_checkbox(
                 "country_all",
                 value=True
@@ -805,7 +803,7 @@ def server(input, output, session):
     # study
     @reactive.effect
     @reactive.event(input.study_all)
-    def _():
+    def study_event_all():
         if input.study_all():
             ui.update_checkbox_group(
                 "study",
@@ -819,7 +817,7 @@ def server(input, output, session):
 
     @reactive.effect
     @reactive.event(input.study)
-    def _():
+    def study_select_all():
         if set(input.study()) == set(studies):
             ui.update_checkbox(
                 "study_all",
@@ -829,7 +827,7 @@ def server(input, output, session):
     # industry
     @reactive.effect
     @reactive.event(input.industry_all)
-    def _():
+    def industry_event_all():
         if input.industry_all():
             ui.update_checkbox_group(
                 "industry",
@@ -843,7 +841,7 @@ def server(input, output, session):
 
     @reactive.effect
     @reactive.event(input.industry)
-    def _():
+    def industry_select_all():
         if set(input.industry()) == set(industries):
             ui.update_checkbox(
                 "industry_all",
