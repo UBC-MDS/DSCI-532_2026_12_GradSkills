@@ -4,6 +4,8 @@
 from pathlib import Path
 import sys
 
+sys.path.insert(0, str(Path(__file__).parent))
+
 # Third-party imports
 import altair as alt
 from dotenv import load_dotenv
@@ -18,7 +20,6 @@ from shiny import App, render, ui, reactive, req
 from shinywidgets import render_altair, render_widget, output_widget
 from ai_tab import ai_tab_ui, ai_tab_server
 
-sys.path.insert(0, str(Path(__file__).parent))
 
 load_dotenv(Path(__file__).parent.parent / ".env")
 
