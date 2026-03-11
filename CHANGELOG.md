@@ -22,6 +22,8 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 
 - Corrected any assignment of the underscore character that interferred with ibis capabilities. @beardw
+- Fixed `ai_tab` import error on Posit Cloud using try/except for relative vs absolute import compatibility. @apoorva43
+- Fixed missing pip dependencies (pyarrow, pyarrow-hotfix, duckdb, ibis-framework) in `environment.yml`. @apoorva43
 
 - **Feedback prioritization issue link:** #...
 
