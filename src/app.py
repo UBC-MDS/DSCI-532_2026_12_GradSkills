@@ -421,11 +421,12 @@ def server(input, output, session):
                 raw_data.Graduation_Year.max().execute(),
             ],
         )
-        ui.update_checkbox_group("region", choices=regions, selected=regions)
-        ui.update_checkbox_group("country", choices=countries, selected=countries)
-        ui.update_checkbox_group("study", choices=studies, selected=studies)
-        ui.update_checkbox_group("industry", choices=industries, selected=industries)
+        ui.update_checkbox("region_all", value=True)
+        ui.update_checkbox("country_all", value=True)
+        ui.update_checkbox("study_all", value=True)
+        ui.update_checkbox("industry_all", value=True)
         ui.update_checkbox_group("degree", choices=degrees, selected=degrees)
+
 
     @reactive.calc
     def filtered_data():
