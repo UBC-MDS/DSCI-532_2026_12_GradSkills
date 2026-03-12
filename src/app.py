@@ -628,7 +628,7 @@ def server(input, output, session):
             alt.Chart(top_industries)
             .mark_bar()
             .encode(
-                y=alt.Y("Top_Industry:N", sort=None),
+                y=alt.Y("Top_Industry:N", sort=None, title=None),
                 x=alt.X(
                     "avg_salary:Q",
                     title="Average Starting Salary (USD)",
