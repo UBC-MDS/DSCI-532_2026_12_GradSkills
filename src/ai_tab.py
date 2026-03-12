@@ -91,8 +91,12 @@ def ai_tab_ui():
         "AI Assistant",
         ui.page_fillable(
             ui.layout_sidebar(
-                qc.sidebar(position="right"),
-
+                qc.sidebar(
+                    width=400,
+                    open="always",
+                    position="right",
+                    style="height: 85vh; overflow-y: auto;",
+                ),
                 ui.layout_columns(
                     ui.card(
                         ui.card_header(
@@ -121,7 +125,7 @@ def ai_tab_ui():
                 ),
             ),
             FOOTER
-        )
+        ),
     )
 
 
