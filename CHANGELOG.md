@@ -15,6 +15,7 @@ All notable changes to this project will be documented in this file.
 - Updated app.py to lazy loading using parquet and DuckDB @beardw
 - Refactored several parts of the codebase to account for parquet formatting of data. @beardw
 - Updated ai_tab.py to lazy loading using parquet and DuckDB @beardw
+- Refactored functions for checkboxes for the filters. @harrisonlee0530
 
 - <!-- Spec or design deviations, and motivation. -->
 - <!-- Feedback items you addressed: "Addressed: <item description> (#<prioritization issue>) via #<PR>" -->
@@ -24,6 +25,8 @@ All notable changes to this project will be documented in this file.
 - Corrected any assignment of the underscore character that interferred with ibis capabilities. @beardw
 - Fixed `ai_tab` import error on Posit Cloud using try/except for relative vs absolute import compatibility. @apoorva43
 - Fixed missing pip dependencies (pyarrow, pyarrow-hotfix, duckdb, ibis-framework) in `environment.yml`. @apoorva43
+- Removed color and y-axis label from top industries bar chart. @harrisonlee0530
+- Removed animation play button for year filter slider. @harrisonlee0530
 
 - **Feedback prioritization issue link:** #...
 
