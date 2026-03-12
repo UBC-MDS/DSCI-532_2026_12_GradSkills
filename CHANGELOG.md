@@ -18,6 +18,7 @@ All notable changes to this project will be documented in this file.
 - Moved AI Assistant tab chat sidebar to the right side of the layout for better visibility of outputs. @apoorva43
 - Reordered AI Assistant tab layout so charts appear above the dataframe table. @apoorva43
 - Moved Download CSV button to the right of the dataframe card header for cleaner presentation. @apoorva43
+- **Addressed:** AI Assistant tab chat sidebar not static and non-intuitive layout ([#94](https://github.com/UBC-MDS/DSCI-532_2026_12_GradSkills/issues/94), [#95](https://github.com/UBC-MDS/DSCI-532_2026_12_GradSkills/issues/95)) via [#99](https://github.com/UBC-MDS/DSCI-532_2026_12_GradSkills/pull/99).
 
 - <!-- Spec or design deviations, and motivation. -->
 - <!-- Feedback items you addressed: "Addressed: <item description> (#<prioritization issue>) via #<PR>" -->
