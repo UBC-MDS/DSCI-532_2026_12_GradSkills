@@ -99,32 +99,29 @@ def ai_tab_ui():
                 ),
                 ui.layout_columns(
                     ui.card(
-                        ui.card_header(
-                            ui.output_text("ai_chat_title"),
-                            ui.download_button("download_data", "Download CSV"),
-                        ),
-                        ui.card(
-                            ui.output_data_frame("ai_chat_table"),
-                            full_screen=True,
-                        ),
+                        ui.card_header("Top Industries by Average Starting Salary (USD)"),
+                        output_widget("ai_industries_bar"),
+                        full_screen=True,
+                        style="height: 350px;",
                     ),
-                    ui.layout_column_wrap(
-                        ui.card(
-                            ui.card_header("Top Industries by Average Starting Salary (USD)"),
-                            output_widget("ai_industries_bar"),
-                            full_screen=True,
-                        ),
-                        ui.card(
-                            ui.card_header("Average Yearly Starting Salary (USD)"),
-                            output_widget("ai_study_salary_plot"),
-                            full_screen=True
-                        ),
-                        width=1,
+                    ui.card(
+                        ui.card_header("Average Yearly Starting Salary (USD)"),
+                        output_widget("ai_study_salary_plot"),
+                        full_screen=True,
+                        style="height: 350px;"
                     ),
                     col_widths=(6, 6),
                 ),
+                ui.card(
+                    ui.card_header(
+                        ui.output_text("ai_chat_title"),
+                        ui.download_button("download_data", "Download CSV"),
+                    ),
+                    ui.output_data_frame("ai_chat_table"),
+                    full_screen=True,
+                ),
             ),
-            FOOTER
+            FOOTER,
         ),
     )
 
