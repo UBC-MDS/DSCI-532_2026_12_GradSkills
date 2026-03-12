@@ -114,8 +114,11 @@ def ai_tab_ui():
                 ),
                 ui.card(
                     ui.card_header(
-                        ui.output_text("ai_chat_title"),
-                        ui.download_button("download_data", "Download CSV"),
+                        ui.div(
+                            ui.output_text("ai_chat_title"),
+                            ui.download_button("download_data", "Download CSV"),
+                            style="display: flex; justify-content: space-between; align-items: center; width: 100%;",
+                        ),
                     ),
                     ui.output_data_frame("ai_chat_table"),
                     full_screen=True,
