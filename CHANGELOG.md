@@ -8,8 +8,6 @@ All notable changes to this project will be documented in this file.
 
 - Added packages to `requirements.txt` for lazy loading (ibis and DuckDB). @beardw
 
-- <!-- New features, components, tests - one line each. Reference PRs where relevant (e.g. #12). -->
-
 ### Changed
 
 - Updated `app.py` to lazy loading using parquet and DuckDB @beardw
@@ -19,15 +17,15 @@ All notable changes to this project will be documented in this file.
 - Reordered AI Assistant tab layout so charts appear above the dataframe table. @apoorva43
 - Moved Download CSV button to the right of the dataframe card header for cleaner presentation. @apoorva43
 - **Addressed:** AI Assistant tab chat sidebar not static and non-intuitive layout ([#94](https://github.com/UBC-MDS/DSCI-532_2026_12_GradSkills/issues/94), [#95](https://github.com/UBC-MDS/DSCI-532_2026_12_GradSkills/issues/95)) via [#99](https://github.com/UBC-MDS/DSCI-532_2026_12_GradSkills/pull/99).
-
-- <!-- Spec or design deviations, and motivation. -->
-- <!-- Feedback items you addressed: "Addressed: <item description> (#<prioritization issue>) via #<PR>" -->
+- Refactored functions for checkboxes for the filters. @harrisonlee0530
 
 ### Fixed
 
 - Corrected any assignment of the underscore character that interferred with ibis capabilities. @beardw
 - Fixed `ai_tab` import error on Posit Cloud using try/except for relative vs absolute import compatibility. @apoorva43
 - Fixed missing pip dependencies (pyarrow, pyarrow-hotfix, duckdb, ibis-framework) in `environment.yml`. @apoorva43
+- Removed color and y-axis label from top industries bar chart. @harrisonlee0530
+- Removed animation play button for year filter slider. @harrisonlee0530
 - Fixed AI Assistant tab chat sidebar to have a fixed height with internal scrolling so the input box remains visible during long conversations. @apoorva43
 
 - **Feedback prioritization issue link:** #...
