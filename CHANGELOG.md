@@ -18,6 +18,7 @@ All notable changes to this project will be documented in this file.
 - Moved Download CSV button to the right of the dataframe card header for cleaner presentation. @apoorva43
 - **Addressed:** AI Assistant tab chat sidebar not static and non-intuitive layout ([#94](https://github.com/UBC-MDS/DSCI-532_2026_12_GradSkills/issues/94), [#95](https://github.com/UBC-MDS/DSCI-532_2026_12_GradSkills/issues/95)) via [#99](https://github.com/UBC-MDS/DSCI-532_2026_12_GradSkills/pull/99).
 - Refactored functions for checkboxes for the filters. @harrisonlee0530
+- Updated dashboard specifications (`reports/m2_spec.md`) to reflect AI Assistant tab additions: added job story 5, AI Assistant tab components, reactivity diagram and calculation details. @apoorva43
 
 ### Fixed
 
