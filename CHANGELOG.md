@@ -8,8 +8,6 @@ All notable changes to this project will be documented in this file.
 
 - Added packages to `requirements.txt` for lazy loading (ibis and DuckDB). @beardw
 
-- <!-- New features, components, tests - one line each. Reference PRs where relevant (e.g. #12). -->
-
 ### Changed
 
 - Updated `app.py` to lazy loading using parquet and DuckDB @beardw
@@ -20,9 +18,6 @@ All notable changes to this project will be documented in this file.
 - Moved Download CSV button to the right of the dataframe card header for cleaner presentation. @apoorva43
 - **Addressed:** AI Assistant tab chat sidebar not static and non-intuitive layout ([#94](https://github.com/UBC-MDS/DSCI-532_2026_12_GradSkills/issues/94), [#95](https://github.com/UBC-MDS/DSCI-532_2026_12_GradSkills/issues/95)) via [#99](https://github.com/UBC-MDS/DSCI-532_2026_12_GradSkills/pull/99).
 - Refactored functions for checkboxes for the filters. @harrisonlee0530
-
-- <!-- Spec or design deviations, and motivation. -->
-- <!-- Feedback items you addressed: "Addressed: <item description> (#<prioritization issue>) via #<PR>" -->
 
 ### Fixed
 
