@@ -87,8 +87,8 @@ flowchart TD
   ChatGithub[/ChatGithub - GPT-4.1-mini/] --> qc
 
   qc --> qc_vals{{qc_vals}}
-  qc_vals --> qc_df{{qc_vals.df\(\)}}
-  qc_vals --> qc_title{{qc_vals.title\(\)}}
+  qc_vals --> qc_df{{qc_vals.df}}
+  qc_vals --> qc_title{{qc_vals.title}}
 
   qc_df --> ai_chat_table([ai_chat_table])
   qc_df --> download_data([download_data])
