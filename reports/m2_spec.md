@@ -1,6 +1,6 @@
 # Dashboard Specifications
 
-Here are the dashboard specs for M2:
+Here are the dashboard specs for M4:
 
 ## Job Stories
 
@@ -10,8 +10,11 @@ Here are the dashboard specs for M2:
 | 2 | As a student exploring job opportunities, I want to compare top industries in my field so that I can target high-demand and high-paying sectors. | ✅ Implemented | Implemented through the dynamic "Top Industries by Average Starting Salary" bar chart. The chart updates based on sidebar filters and university table selection, allowing users to compare salary outcomes across industries within the filtered subset. |
 | 3 | As a career advisor, I want to visualize employment rates at both 6 and 12 months so that I can evaluate short-term versus longer-term employment stability for graduates. | ✅ Implemented | Implemented using summary KPI cards displaying Q1, median, Q3, and mean values for 6-month and 12-month employment rates. These values update based on the active filters and selected universities, allowing focused comparison of short-term versus longer-term outcomes. |
 | 4 | As a university administrator, I want to rank and interactively explore top-performing universities under selected filters so that I can benchmark institutional performance. | 🔄 Revised | Originally described as viewing top-performing universities in a chart. Revised after implementing a ranked DataGrid with row selection. Selecting universities updates downstream views, enabling more detailed benchmarking analysis than the original chart-based idea. |
+| 5 | As a graduate or prospective student, I want to query the dataset in plain English so that I can explore employment outcomes without manually adjusting multiple filter controls. | ✅ Implemented | Implemented via the AI Assistant tab using `querychat` and `ChatGithub` (GPT-4.1-mini). Natural language input filters the full dataset reactively and drives a data table, two charts and a CSV download. | 
 
 ## Component Inventory
+
+### 1. Main Dashboard
 
 | ID | Type | Shiny widget / renderer | Depends on | Job Stories |
 | ---- | ------ | ------------------------- | ------------ | ------------- |
@@ -37,7 +40,24 @@ Here are the dashboard specs for M2:
 | `industries_bar` | Output | `@render_altair` | `display_data` | #2 |
 | `study_salary_plot` | Output | `@render_altair` | `display_data` | #1 |
 
+### 2. AI Assistant Tab
+
+| ID | Type | Shiny widget / renderer | Depends on | Job Stories |
+| ---- | ------ | ------------------------- | ------------ | ------------- |
+| `qc` (QueryChat instance) | AI module | `querychat.QueryChat()` | `raw_data`, `ChatGithub(gpt-4.1-mini)` | #5 |
+| `qc.sidebar()` | UI element | `querychat` sidebar | `qc` | #5 |
+| `qc_vals` | Reactive values | `qc.server()` | `qc` | #5 |
+| `qc_vals.df()` | Reactive calc | QueryChat reactive dataframe | `qc_vals` | #5 |
+| `qc_vals.title()` | Reactive calc | QueryChat reactive title string | `qc_vals` | #5 |
+| `ai_chat_title` | Output | `@render.text` | `qc_vals.title()` | #5 |
+| `ai_chat_table` | Output | `@render.data_frame` | `qc_vals.df()` | #5 |
+| `download_data` | Output | `@render.download` | `qc_vals.df()` | #5 |
+| `ai_industries_bar` | Output | `@render_altair` | `qc_vals.df()` | #5 |
+| `ai_study_salary_plot` | Output | `@render_altair` | `qc_vals.df()` | #5 |
+
 ## Reactivity Diagram
+
+### 1. Main Dashboard
 
 ```mermaid
 flowchart TD
@@ -59,9 +79,29 @@ flowchart TD
   display_data --> industries_bar([industries_bar]) & study_salary_plot([study_salary_plot])
 ```
 
+### 2. AI Assistant Tab
+
+```mermaid
+flowchart TD
+  raw_data[/raw_data/] --> qc{{qc: QueryChat}}
+  ChatGithub[/ChatGithub - GPT-4.1-mini/] --> qc
+
+  qc --> qc_vals{{qc_vals}}
+  qc_vals --> qc_df{{qc_vals.df\(\)}}
+  qc_vals --> qc_title{{qc_vals.title\(\)}}
+
+  qc_df --> ai_chat_table([ai_chat_table])
+  qc_df --> download_data([download_data])
+  qc_df --> ai_industries_bar([ai_industries_bar])
+  qc_df --> ai_study_salary_plot([ai_study_salary_plot])
+  qc_title --> ai_chat_title([ai_chat_title])
+```
+
 ## Calculation Details
 
-### `filtered_data`
+### 1. Main Dashboard
+
+#### `filtered_data`
 
 **Depends on:**
 
@@ -89,7 +129,7 @@ flowchart TD
 - `top_uni`
 - `filter_data_by_university`
 
-### `top_uni`
+#### `top_uni`
 
 **Depends on:**
 
@@ -116,7 +156,7 @@ flowchart TD
 - `university_table`
 - `filter_data_by_university`
 
-### `filter_data_by_university`
+#### `filter_data_by_university`
 
 **Depends on:**
 
@@ -140,7 +180,7 @@ flowchart TD
 - `starting_salary`
 - `display_data`
 
-### `display_data`
+#### `display_data`
 
 **Depends on:**
 
@@ -157,6 +197,42 @@ flowchart TD
 - `industries_bar`
 - `study_salary_plot`
 
+### 2. AI Assistant Tab
+
+#### `qc_vals.df()`
+
+**Depends on:**
+
+- `qc_vals` (QueryChat reactive state, updated on each user message)
+
+**Transformations performed:**
+
+- Reactively returns the DataFrame resulting from the LLM-generated filter applied to `raw_data`. 
+- When no query has been issued, returns the full unfiltered dataset.
+- Updates all downstream outputs whenever the user submits a new message.
+
+**Outputs that consume it:**
+
+- `ai_chat_table`
+- `download_data`
+- `ai_industries_bar`
+- `ai_study_salary_plot`
+
+#### `qc_vals.title()`
+
+**Depends on:**
+
+- `qc_vals` (QueryChat reactive state, updated on each user message)
+
+**Transformations performed:**
+
+- Reactively returns a plain-English string summarising the active query (generated by QueryChat).
+- Falls back to `"Graduate Employability Dataset"` when no query has been submitted.
+
+**Outputs that consume it:**
+
+- `ai_chat_title`
+
 ## Complexity Enhancement
 
 This prototype implements two interaction enhancements that improve the user experience:
@@ -169,3 +245,9 @@ This prototype implements two interaction enhancements that improve the user exp
    - The `Top Universities` DataGrid supports row selection.
    - Selected universities feed the downstream KPI cards and charts through `filter_data_by_university`.
    - This is especially useful for Job Story 4 because users can move from ranking to focused comparison in a single interaction.
+
+3. **Natural language querying with linked visualisations**
+   - The AI Assistant tab replaces manual multi-widget filtering with a single free-text chat input.
+   - Each query reactively updates four outputs simultaneously: the data table, the CSV download, the industry salary bar chart and the yearly salary line chart.
+   - Suggested starter queries lower the barrier to entry for users unfamiliar with the dataset structure.
+   - The CSV download button lets users export exactly the subset the model filtered, supporting offline analysis. 
