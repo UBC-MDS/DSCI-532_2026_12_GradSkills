@@ -318,7 +318,7 @@ app_ui = ui.page_navbar(
                 ),
                 ui.layout_column_wrap(
                     ui.card(
-                        ui.card_header("Industries"),
+                        ui.card_header("Average Starting Salary (USD) for Top Industries by Field"),
                         output_widget("industries_bar"),
                         full_screen=True,
                     ),
@@ -631,7 +631,7 @@ def server(input, output, session):
                 y=alt.Y("Top_Industry:N", sort=None, title=None),
                 x=alt.X(
                     "avg_salary:Q",
-                    title="Average Starting Salary (USD)",
+                    title=None,
                     axis=alt.Axis(format="$,.0f"),
                 ),
                 tooltip=[
@@ -645,7 +645,6 @@ def server(input, output, session):
             .properties(
                 width="container",
                 height="container",
-                title="Top Industries by Average Starting Salary",
             )
         )
 
