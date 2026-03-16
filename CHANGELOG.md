@@ -19,6 +19,9 @@ All notable changes to this project will be documented in this file.
 - **Addressed:** AI Assistant tab chat sidebar not static and non-intuitive layout ([#94](https://github.com/UBC-MDS/DSCI-532_2026_12_GradSkills/issues/94), [#95](https://github.com/UBC-MDS/DSCI-532_2026_12_GradSkills/issues/95)) via [#99](https://github.com/UBC-MDS/DSCI-532_2026_12_GradSkills/pull/99).
 - Refactored functions for checkboxes for the filters. @harrisonlee0530
 - Updated dashboard specifications (`reports/m2_spec.md`) to reflect AI Assistant tab additions: added job story 5, AI Assistant tab components, reactivity diagram and calculation details. @apoorva43
+- Reordered year fitler for better placement and accessibility. @beardw
+- Increase KPI bottom metrics font size for accessibility. @beardw
+- Updated bar and line charts' titles, axises, and colours for cleaner presentation. @beardw
 
 ### Fixed
 
@@ -29,15 +32,15 @@ All notable changes to this project will be documented in this file.
 - Removed animation play button for year filter slider. @harrisonlee0530
 - Fixed AI Assistant tab chat sidebar to have a fixed height with internal scrolling so the input box remains visible during long conversations. @apoorva43
 
-- **Feedback prioritization issue link:** #...
+- **Feedback prioritization issue link:** #76
 
 ### Known Issues
 
-- <!-- Anything incomplete or broken TAs should be aware of (so it isn't mistaken for unfinished work). -->
+- Nothing currently.
 
-### Release Highlight: [Name of your advanced feature]
+### Release Highlight: Side-by-side University Comparison
 
-<!-- One short paragraph describing what you built and what it does for the user. -->
+- This feature allows users to select multiple universities from the Top Universities table, and compare them against one another. The goal was to allow a user to highlight the universities they are actually interested without 'clutter' from being mixed in with others. The main bar charts here are comparisons for employment rate (6 and 12 months) and average starting salary. However, we also made the two above charts update on selection.
 
 - **Option chosen:** D - Please note that this was completed during Milestone 3. We confirmed with Ilya that
 this was alright. You'll note that this was the hard suggestion from the TA feedback linked below. We extended
@@ -49,21 +52,16 @@ our user stories where they may want to only select a subset of universities and
 
 ### Collaboration
 
-<!-- Summary of workflow or collaboration improvements made since M3. -->
-
-- **CONTRIBUTING.md:** <!-- Link to the PR that updated it with your M3 retrospective and M4 norms. -->
-- **M3 retrospective:** <!-- What changed in your workflow after M3 collaboration feedback. -->
-- **M4:** <!-- What you tried or improved this milestone. -->
+- Team agreed during lab that things are going well.
 
 ### Reflection
 
-<!-- Standard (see General Guidelines): what the dashboard does well, current limitations,
-     any intentional deviations from DSCI 531 visualization best practices. -->
+- The team is quite happy with the dashboard. There are a multitude of filters that allow the user to become very specific in what they would like to narrow down to. Our KPI cards are very informative and better than we initially started out with. The three different visualization (table, bar, and line chart) highlight the dashboards key takeaways quite well. At the bottom of the Main tab, we have our side-by-side university comparisons. While there was some confusion around these in the feedback, we have included an About Me dropdown. Additionally, we believe their capabilities to be useful once the user knows how to interact with them. Given that we have specific users and use-cases in mind for this dashboard-as with many dashboards-a training session could mitigate any confusion.
+- Our AI Assistant tab opts to having the chat on the right-hand side of the page. We thought this would be in line with many websites chatbots that open on this side of the webpage. The goal was reduce user friction when first encountering this tab and display a set-up they may already be familiar with.
 
-<!-- Trade-offs: one sentence on feedback prioritization - full rationale is in #<issue> and ### Changed above. -->
+- We decided to go with the critical issues in #76 as these affects core functionality of several of our filters (i.e. the "Select All" option for each dropdown) and updating our AI page to prevent the page from stretching out making for an unsightly dashboard experience. Thoughts regarding feedback can be found in the description of the issue.
 
-<!-- Most useful: which lecture, material, or feedback shaped your work most this milestone,
-     and anything you wish had been covered. -->
+- The first two lectures introducing Shiny dashboards were the most interesting for me. I found those gave me a good reference point. The lecture on lazy loading was also helpful. In future I would reduce LLM to one week at the end and cover additional dashboard features. @beardw
 
 ## [0.3.0] - 2026-03-08
 
