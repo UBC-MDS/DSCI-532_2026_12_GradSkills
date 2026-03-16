@@ -49,7 +49,17 @@ conda env update -f environment.yml --prune
 conda activate graduate_skills
 ```
 
-#### 3) Run the dashboard
+#### 3) Set up the AI Assistant tab
+
+The AI Assistant tab requires a GitHub personal access token to run locally. Create a `.env` file in the project root (it is gitignored, do not commit it):
+
+``` bash
+GITHUB_TOKEN=your_github_token_here
+```
+
+To generate a token, go to **GitHub &rarr; Settings &rarr; Developer Settings &rarr; Personal Access Tokens**.
+
+#### 4) Run the dashboard
 
 From the repository root, run:
 
