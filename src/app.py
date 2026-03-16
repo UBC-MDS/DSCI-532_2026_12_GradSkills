@@ -324,7 +324,7 @@ app_ui = ui.page_navbar(
                     ),
                     ui.card(
                         ui.card_header(
-                            "Yearly Starting Salary for each Field of Study"
+                            "Average Yearly Starting Salary (USD)"
                         ),
                         output_widget("study_salary_plot"),
                         full_screen=True,
@@ -669,10 +669,15 @@ def server(input, output, session):
             alt.Chart(salary_over_time)
             .mark_line(point=True)
             .encode(
-                x=alt.X("Graduation_Year:O", title="Year", sort="ascending"),
+                x=alt.X(
+                    "Graduation_Year:O",
+                    title=None,
+                    sort="ascending",
+                    axis=alt.Axis(labelAngle=0)
+                    ),
                 y=alt.Y(
                     "avg_salary:Q",
-                    title="Average Starting Salary (USD)",
+                    title=None,
                     axis=alt.Axis(format="$,.0f"),
                     scale=alt.Scale(domain=[ymin, ymax]),
                 ),
@@ -694,7 +699,6 @@ def server(input, output, session):
             .properties(
                 width="container",
                 height="container",
-                title="Average Starting Salary Over Time",
             )
         )
 
