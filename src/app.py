@@ -223,6 +223,19 @@ app_ui = ui.page_navbar(
             ui.sidebar(
                 ui.input_action_button("reset_btn", "Reset Filters"),
                 ui.input_switch("sidebar_switch", "Open/Close Dropdowns"),
+                ui.input_slider(
+                    id="grad_year",
+                    label="Graduation Year",
+                    min=min_year,
+                    max=max_year,
+                    value=[
+                        max_year - 4,
+                        max_year,
+                    ],
+                    step=1,
+                    ticks=True,
+                    sep="",
+                ),
                 ui.accordion(
                     ui.accordion_panel(
                         "Region",
@@ -285,19 +298,6 @@ app_ui = ui.page_navbar(
                     ),
                     id="sidebar_panels",
                     open=False,
-                ),
-                ui.input_slider(
-                    id="grad_year",
-                    label="Graduation Year",
-                    min=min_year,
-                    max=max_year,
-                    value=[
-                        max_year - 4,
-                        max_year,
-                    ],
-                    step=1,
-                    ticks=True,
-                    sep="",
                 ),
                 width=300,
             ),
