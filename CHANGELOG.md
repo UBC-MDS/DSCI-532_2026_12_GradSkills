@@ -19,9 +19,8 @@ All notable changes to this project will be documented in this file.
 - **Addressed:** AI Assistant tab chat sidebar not static and non-intuitive layout ([#94](https://github.com/UBC-MDS/DSCI-532_2026_12_GradSkills/issues/94), [#95](https://github.com/UBC-MDS/DSCI-532_2026_12_GradSkills/issues/95)) via [#99](https://github.com/UBC-MDS/DSCI-532_2026_12_GradSkills/pull/99).
 - Refactored functions for checkboxes for the filters. @harrisonlee0530
 - Updated dashboard specifications (`reports/m2_spec.md`) to reflect AI Assistant tab additions: added job story 5, AI Assistant tab components, reactivity diagram and calculation details. @apoorva43
-- Reordered year fitler for better placement and accessibility. @beardw
-- Increase KPI bottom metrics font size for accessibility. @beardw
-- Updated bar and line charts' titles, axises, and colours for cleaner presentation. @beardw
+- **Addressed:** Reordered year fitler for better placement and accessibility and Increase KPI bottom metrics font size for accessibility. [#101](https://github.com/UBC-MDS/DSCI-532_2026_12_GradSkills/issues/101) via [#105](https://github.com/UBC-MDS/DSCI-532_2026_12_GradSkills/pull/105) @beardw
+- **Addressed:** Updated bar and line charts' titles, axises, and colours for cleaner presentation in conjunction with [#84](https://github.com/UBC-MDS/DSCI-532_2026_12_GradSkills/issues/84) via via [#105](https://github.com/UBC-MDS/DSCI-532_2026_12_GradSkills/pull/105) @beardw
 
 ### Fixed
 
