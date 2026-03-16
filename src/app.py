@@ -172,7 +172,7 @@ def render_metric_card(
                 justify-content: center;
                 column-gap: {px(14)};
                 row-gap: {px(3)};
-                font-size: {pt(12)};
+                font-size: {pt(14)};
                 line-height: 1.20;
             ">
                 <div style="text-align: right; font-weight: 400;">Bottom 25%:</div>
