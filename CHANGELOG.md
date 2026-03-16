@@ -16,11 +16,12 @@ All notable changes to this project will be documented in this file.
 - Moved AI Assistant tab chat sidebar to the right side of the layout for better visibility of outputs. @apoorva43
 - Reordered AI Assistant tab layout so charts appear above the dataframe table. @apoorva43
 - Moved Download CSV button to the right of the dataframe card header for cleaner presentation. @apoorva43
-- **Addressed:** AI Assistant tab chat sidebar not static and non-intuitive layout ([#94](https://github.com/UBC-MDS/DSCI-532_2026_12_GradSkills/issues/94), [#95](https://github.com/UBC-MDS/DSCI-532_2026_12_GradSkills/issues/95)) via [#99](https://github.com/UBC-MDS/DSCI-532_2026_12_GradSkills/pull/99).
 - Refactored functions for checkboxes for the filters. @harrisonlee0530
 - Updated dashboard specifications (`reports/m2_spec.md`) to reflect AI Assistant tab additions: added job story 5, AI Assistant tab components, reactivity diagram and calculation details. @apoorva43
+- **Addressed:** AI Assistant tab chat sidebar not static and non-intuitive layout ([#94](https://github.com/UBC-MDS/DSCI-532_2026_12_GradSkills/issues/94), [#95](https://github.com/UBC-MDS/DSCI-532_2026_12_GradSkills/issues/95)) via [#99](https://github.com/UBC-MDS/DSCI-532_2026_12_GradSkills/pull/99). @apoorva43
 - **Addressed:** Reordered year fitler for better placement and accessibility and Increase KPI bottom metrics font size for accessibility. [#101](https://github.com/UBC-MDS/DSCI-532_2026_12_GradSkills/issues/101) via [#105](https://github.com/UBC-MDS/DSCI-532_2026_12_GradSkills/pull/105) @beardw
 - **Addressed:** Updated bar and line charts' titles, axises, and colours for cleaner presentation in conjunction with [#84](https://github.com/UBC-MDS/DSCI-532_2026_12_GradSkills/issues/84) via via [#105](https://github.com/UBC-MDS/DSCI-532_2026_12_GradSkills/pull/105) @beardw
+- **Addressed:** Updated `README.md` to introduce the AI Assistant tab and document the `.env` setup for local development ([#82](https://github.com/UBC-MDS/DSCI-532_2026_12_GradSkills/issues/82), [#96](https://github.com/UBC-MDS/DSCI-532_2026_12_GradSkills/issues/96)) via [#106](https://github.com/UBC-MDS/DSCI-532_2026_12_GradSkills/pull/106). @apoorva43
 
 ### Fixed
 
