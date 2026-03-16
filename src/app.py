@@ -172,7 +172,7 @@ def render_metric_card(
                 justify-content: center;
                 column-gap: {px(14)};
                 row-gap: {px(3)};
-                font-size: {pt(12)};
+                font-size: {pt(14)};
                 line-height: 1.20;
             ">
                 <div style="text-align: right; font-weight: 400;">Bottom 25%:</div>
@@ -223,6 +223,19 @@ app_ui = ui.page_navbar(
             ui.sidebar(
                 ui.input_action_button("reset_btn", "Reset Filters"),
                 ui.input_switch("sidebar_switch", "Open/Close Dropdowns"),
+                ui.input_slider(
+                    id="grad_year",
+                    label="Graduation Year",
+                    min=min_year,
+                    max=max_year,
+                    value=[
+                        max_year - 4,
+                        max_year,
+                    ],
+                    step=1,
+                    ticks=True,
+                    sep="",
+                ),
                 ui.accordion(
                     ui.accordion_panel(
                         "Region",
@@ -286,19 +299,6 @@ app_ui = ui.page_navbar(
                     id="sidebar_panels",
                     open=False,
                 ),
-                ui.input_slider(
-                    id="grad_year",
-                    label="Graduation Year",
-                    min=min_year,
-                    max=max_year,
-                    value=[
-                        max_year - 4,
-                        max_year,
-                    ],
-                    step=1,
-                    ticks=True,
-                    sep="",
-                ),
                 width=300,
             ),
             ui.layout_columns(
@@ -318,13 +318,13 @@ app_ui = ui.page_navbar(
                 ),
                 ui.layout_column_wrap(
                     ui.card(
-                        ui.card_header("Industries"),
+                        ui.card_header("Average Starting Salary (USD) for Top Industries by Field"),
                         output_widget("industries_bar"),
                         full_screen=True,
                     ),
                     ui.card(
                         ui.card_header(
-                            "Yearly Starting Salary for each Field of Study"
+                            "Average Yearly Starting Salary (USD)"
                         ),
                         output_widget("study_salary_plot"),
                         full_screen=True,
@@ -631,7 +631,7 @@ def server(input, output, session):
                 y=alt.Y("Top_Industry:N", sort=None, title=None),
                 x=alt.X(
                     "avg_salary:Q",
-                    title="Average Starting Salary (USD)",
+                    title=None,
                     axis=alt.Axis(format="$,.0f"),
                 ),
                 tooltip=[
@@ -645,7 +645,6 @@ def server(input, output, session):
             .properties(
                 width="container",
                 height="container",
-                title="Top Industries by Average Starting Salary",
             )
         )
 
@@ -670,10 +669,15 @@ def server(input, output, session):
             alt.Chart(salary_over_time)
             .mark_line(point=True)
             .encode(
-                x=alt.X("Graduation_Year:O", title="Year", sort="ascending"),
+                x=alt.X(
+                    "Graduation_Year:O",
+                    title=None,
+                    sort="ascending",
+                    axis=alt.Axis(labelAngle=0)
+                    ),
                 y=alt.Y(
                     "avg_salary:Q",
-                    title="Average Starting Salary (USD)",
+                    title=None,
                     axis=alt.Axis(format="$,.0f"),
                     scale=alt.Scale(domain=[ymin, ymax]),
                 ),
@@ -695,7 +699,6 @@ def server(input, output, session):
             .properties(
                 width="container",
                 height="container",
-                title="Average Starting Salary Over Time",
             )
         )
 

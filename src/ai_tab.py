@@ -186,7 +186,6 @@ def ai_tab_server(input, output, session):
             .encode(
                 y=alt.Y("Top_Industry:N", sort=None, title=None),
                 x=alt.X("avg_salary:Q", title=None, axis=alt.Axis(format="$,.0f")),
-                color=alt.Color("Top_Industry:N", title="Industry", legend=None),
                 tooltip=[
                     alt.Tooltip("rank:Q", title="Rank"),
                     alt.Tooltip("Top_Industry:N", title="Industry"),
