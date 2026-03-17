@@ -194,7 +194,7 @@ last_year = raw_data.Graduation_Year.max().execute()
 min_year = raw_data.Graduation_Year.min().execute()
 max_year = raw_data.Graduation_Year.max().execute()
 
-baseline_data = raw_data.filter(_.Graduation_Year > last_year - 5)
+baseline_data = raw_data.filter(_.Graduation_Year == last_year)
 
 emp_6_baseline = baseline_data["Employment_Rate_6_Months (%)"].mean().execute()
 emp_12_baseline = baseline_data["Employment_Rate_12_Months (%)"].mean().execute()
