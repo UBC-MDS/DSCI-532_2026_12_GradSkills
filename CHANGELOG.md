@@ -59,7 +59,7 @@ our user stories where they may want to only select a subset of universities and
 
 ### Collaboration
 
-- **CONTRIBUTING.md:** Updated via PR [#107].
+- **CONTRIBUTING.md:** Updated via PR [#107] and [#108]
 - **M4:** We responded by scoping work more tightly, documenting feedback decisions explicitly, refactoring shared logic before adding tests, and ensuring each teammate addressed at least one feedback item.
 
 ### Reflection
