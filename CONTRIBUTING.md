@@ -71,6 +71,28 @@ conda activate graduate_skills
 Please note that this project is released with a [Contributor Code of Conduct](CODE_OF_CONDUCT.md).
 By participating in this project you agree to abide by its terms.
 
+## Collaboration
+
+### M3 Retrospective
+
+What Worked
+
+* We were able to divide up the work and assign issues during lab each week.
+* All team members completed tasks in a reasonable time frame which allowed others to review and provide feedback.
+* Maintained all PRs being reviewed by at least one other team member.
+
+What Didn't Work
+
+* First/second week were heavy on coding for some team mates than others. We aimed to split this and ensure everyone was able to have more hands-on experience with the code.
+
+### M4 Norms
+
+* Responded by scoping work more tightly.
+* Documenting feedback decisions explicitly.
+* Refactoring shared logic before adding tests.
+* Ensuring each teammate addressed at least one feedback item.
+* Everyone has had a chance to work with the code base.
+
 ## Attribution
 
 These contributing guidelines were adapted from the [dplyr contributing guidelines](https://github.com/tidyverse/dplyr/blob/main/.github/CONTRIBUTING.md).

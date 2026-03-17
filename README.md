@@ -10,6 +10,8 @@ The repository uses a synthetic dataset modeled after common employability/ranki
 
 This interactive employment analytics dashboard helps prospective students, recent graduates, career advisors, and university administrators explore graduate employment outcomes across universities, regions, fields of study, industries, and degree levels. Its purpose is to make complex, multi-dimensional employment data easier to understand with clear, interactive visualisations and summary metrics. The dashboard supports data-driven decisions about education pathways, career planning, and program benchmarking by enabling users to compare employment rates, starting salaries, top industries, and institutional performance.
 
+The dashboard also includes an AI Assistant tab powered by `querychat`. Users can type natural language queries (e.g. "show me PhD graduates with salary above 80000") to filter the dataset and explore outcomes interactively. The filtered results update the dataframe and charts in real time, and can be exported as a CSV.
+
 ### Try it yourself
 
 Stable app: <https://019c9895-4ca7-509b-005a-24f784953ff2.share.connect.posit.cloud/>
@@ -49,7 +51,17 @@ conda env update -f environment.yml --prune
 conda activate graduate_skills
 ```
 
-#### 3) Run the dashboard
+#### 3) Set up the AI Assistant tab
+
+The AI Assistant tab requires a GitHub personal access token to run locally. Create a `.env` file in the project root (it is gitignored, do not commit it):
+
+``` bash
+GITHUB_TOKEN=your_github_token_here
+```
+
+To generate a token, go to **GitHub &rarr; Settings &rarr; Developer Settings &rarr; Personal Access Tokens**.
+
+#### 4) Run the dashboard
 
 From the repository root, run:
 
@@ -58,6 +70,45 @@ shiny run src/app.py
 ```
 
 Shiny will print a local URL in the terminal, typically **<http://127.0.0.1:8000>**. Open it in your browser.
+
+### Running tests
+
+This project includes:
+
+- Unit tests for the refactored `compute_top_universities()` function
+- Playwright tests for core dashboard behaviors
+
+Before running the tests for the first time, install Playwright browsers once:
+
+```bash
+python -m playwright install
+```
+
+Then, from the repository root, run all tests with a single command:
+
+```bash
+pytest
+```
+
+Or if you wish to see the `playwright` tests as they are performed on a browser, run:
+
+```bash
+pytest --headed
+```
+
+### What the tests cover
+
+The unit tests verify that:
+
+- University rows are aggregated correctly before ranking
+- Universities are ranked by descending overall employment mean
+- Empty inputs return a valid empty result
+
+The Playwright tests verify that:
+
+- The university ranking table renders with the expected columns
+- The reset button restores the default filter state
+- Clearing selected rows removes the current university selection
 
 **For more details, refer to [CONTRIBUTING.md](CONTRIBUTING.md)**
 

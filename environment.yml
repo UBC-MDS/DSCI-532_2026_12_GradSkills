@@ -10,9 +10,16 @@ dependencies:
   - anywidget
   - shiny
   - shinywidgets
+  - playwright
+  - pytest
   - pip
 
   - pip:
     - querychat
     - chatlas
     - python-dotenv
+    - ibis-framework
+    - pyarrow-hotfix
+    - pyarrow
+    - duckdb
+    - pytest-playwright

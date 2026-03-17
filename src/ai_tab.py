@@ -4,29 +4,39 @@ AI Assistant Tab for the Graduate Skills Employability Dashboard.
 This module contains the querychat-powered AI tab which allows users to
 filter the graduate employability dataset using natural language queries.
 
-Setup: 
+Setup:
 Requires a .env file in the project root with the following key:
     GITHUB_TOKEN=your_github_token_here
 """
 
-
+# Standard imports
 from pathlib import Path
-from shiny import ui, render
-import querychat
+import sys
+
+# Third-party imports
+import altair as alt
 from chatlas import ChatGithub
 from dotenv import load_dotenv
+import duckdb
+import ibis
+from ibis import _
+import numpy as np
 import pandas as pd
-import altair as alt
+import querychat
+
+# Shiny-related imports
+from shiny import App, render, ui, reactive, req
 from shinywidgets import render_altair, render_widget, output_widget
 
 # Load API keys from .env (project root)
 # .env should exist at the root of the directory, not inside src/
 load_dotenv(Path(__file__).parent.parent / ".env")
 
-raw_data = pd.read_csv("data/processed/processed_data.csv")
+con = ibis.duckdb.connect()
+raw_data = con.read_parquet("data/processed/processed_data.parquet")
 
 qc = querychat.QueryChat(
-    raw_data.copy(),
+    raw_data.execute(),
     "graduate_employability",
     greeting="""👋 Ask me anything about graduate employability.
 
@@ -67,6 +77,7 @@ FOOTER = ui.p(
     class_="text-center text-muted",
 )
 
+
 def ai_tab_ui():
     """
     Return the AI Assistant nav_panel to be added to page_navbar in app.py
@@ -80,37 +91,41 @@ def ai_tab_ui():
         "AI Assistant",
         ui.page_fillable(
             ui.layout_sidebar(
-                qc.sidebar(),
-
+                qc.sidebar(
+                    width=400,
+                    open="always",
+                    position="right",
+                    style="height: 85vh; overflow-y: auto;",
+                ),
                 ui.layout_columns(
                     ui.card(
-                        ui.card_header(
-                            ui.output_text("ai_chat_title"),
-                            ui.download_button("download_data", "Download CSV"),
-                        ),
-                        ui.card(
-                            ui.output_data_frame("ai_chat_table"),
-                            full_screen=True,
-                        ),
+                        ui.card_header("Top Industries by Average Starting Salary (USD)"),
+                        output_widget("ai_industries_bar"),
+                        full_screen=True,
+                        style="height: 350px;",
                     ),
-                    ui.layout_column_wrap(
-                        ui.card(
-                            ui.card_header("Top Industries by Average Starting Salary (USD)"),
-                            output_widget("ai_industries_bar"),
-                            full_screen=True,
-                        ),
-                        ui.card(
-                            ui.card_header("Average Yearly Starting Salary (USD)"),
-                            output_widget("ai_study_salary_plot"),
-                            full_screen=True
-                        ),
-                        width=1,
+                    ui.card(
+                        ui.card_header("Average Yearly Starting Salary (USD)"),
+                        output_widget("ai_study_salary_plot"),
+                        full_screen=True,
+                        style="height: 350px;"
                     ),
                     col_widths=(6, 6),
                 ),
+                ui.card(
+                    ui.card_header(
+                        ui.div(
+                            ui.output_text("ai_chat_title"),
+                            ui.download_button("download_data", "Download CSV"),
+                            style="display: flex; justify-content: space-between; align-items: center; width: 100%;",
+                        ),
+                    ),
+                    ui.output_data_frame("ai_chat_table"),
+                    full_screen=True,
+                ),
             ),
-            FOOTER
-        )
+            FOOTER,
+        ),
     )
 
 
@@ -171,7 +186,6 @@ def ai_tab_server(input, output, session):
             .encode(
                 y=alt.Y("Top_Industry:N", sort=None, title=None),
                 x=alt.X("avg_salary:Q", title=None, axis=alt.Axis(format="$,.0f")),
-                color=alt.Color("Top_Industry:N", title="Industry", legend=None),
                 tooltip=[
                     alt.Tooltip("rank:Q", title="Rank"),
                     alt.Tooltip("Top_Industry:N", title="Industry"),
