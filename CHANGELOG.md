@@ -17,11 +17,15 @@ All notable changes to this project will be documented in this file.
 - Reordered AI Assistant tab layout so charts appear above the dataframe table. @apoorva43
 - Moved Download CSV button to the right of the dataframe card header for cleaner presentation. @apoorva43
 - Refactored functions for checkboxes for the filters. @harrisonlee0530
+- Refactored function for updating top universities logic into external module, to be tested with pytest. @hpalafoxp
+- Created tests for `logic.compute_top_universities` in pytest. @hpalafoxp
+- Created tests for dashboard functionality using `playwright`. @hpalafoxp
 - Updated dashboard specifications (`reports/m2_spec.md`) to reflect AI Assistant tab additions: added job story 5, AI Assistant tab components, reactivity diagram and calculation details. @apoorva43
 - **Addressed:** AI Assistant tab chat sidebar not static and non-intuitive layout ([#94](https://github.com/UBC-MDS/DSCI-532_2026_12_GradSkills/issues/94), [#95](https://github.com/UBC-MDS/DSCI-532_2026_12_GradSkills/issues/95)) via [#99](https://github.com/UBC-MDS/DSCI-532_2026_12_GradSkills/pull/99). @apoorva43
-- **Addressed:** Reordered year fitler for better placement and accessibility and Increase KPI bottom metrics font size for accessibility. [#101](https://github.com/UBC-MDS/DSCI-532_2026_12_GradSkills/issues/101) via [#105](https://github.com/UBC-MDS/DSCI-532_2026_12_GradSkills/pull/105) @beardw
+- **Addressed:** Reordered year filter for better placement and accessibility and Increase KPI bottom metrics font size for accessibility. [#101](https://github.com/UBC-MDS/DSCI-532_2026_12_GradSkills/issues/101) via [#105](https://github.com/UBC-MDS/DSCI-532_2026_12_GradSkills/pull/105) @beardw
 - **Addressed:** Updated bar and line charts' titles, axises, and colours for cleaner presentation in conjunction with [#84](https://github.com/UBC-MDS/DSCI-532_2026_12_GradSkills/issues/84) via via [#105](https://github.com/UBC-MDS/DSCI-532_2026_12_GradSkills/pull/105) @beardw
 - **Addressed:** Updated `README.md` to introduce the AI Assistant tab and document the `.env` setup for local development ([#82](https://github.com/UBC-MDS/DSCI-532_2026_12_GradSkills/issues/82), [#96](https://github.com/UBC-MDS/DSCI-532_2026_12_GradSkills/issues/96)) via [#106](https://github.com/UBC-MDS/DSCI-532_2026_12_GradSkills/pull/106). @apoorva43
+- **Addressed:** Changed baseline, to better compare the current state of universities with the filters by the users to have a more updated an hollistic comparison  [#85](https://github.com/UBC-MDS/DSCI-532_2026_12_GradSkills/issues/85) via ...
 
 ### Fixed
 
@@ -58,9 +62,9 @@ our user stories where they may want to only select a subset of universities and
 
 - The team is quite happy with the dashboard. There are a multitude of filters that allow the user to become very specific in what they would like to narrow down to. Our KPI cards are very informative and better than we initially started out with. The three different visualization (table, bar, and line chart) highlight the dashboards key takeaways quite well. At the bottom of the Main tab, we have our side-by-side university comparisons. While there was some confusion around these in the feedback, we have included an About Me dropdown. Additionally, we believe their capabilities to be useful once the user knows how to interact with them. Given that we have specific users and use-cases in mind for this dashboard-as with many dashboards-a training session could mitigate any confusion.
 - Our AI Assistant tab opts to having the chat on the right-hand side of the page. We thought this would be in line with many websites chatbots that open on this side of the webpage. The goal was reduce user friction when first encountering this tab and display a set-up they may already be familiar with.
-
 - We decided to go with the critical issues in #76 as these affects core functionality of several of our filters (i.e. the "Select All" option for each dropdown) and updating our AI page to prevent the page from stretching out making for an unsightly dashboard experience. Thoughts regarding feedback can be found in the description of the issue.
-
+- We added unit tests for the refactored `compute_top_universities()` function and Playwright tests for core dashboard interactions. The unit tests verify that university rows are aggregated correctly before ranking, that universities are ordered by descending overall employment mean, and that empty inputs return a valid empty result. If this logic changes unexpectedly, the university ranking table could display the wrong order, or fail when filters return no data.
+- We also added Playwright tests to verify that the university ranking table renders with the expected columns, that the reset button restores the default filter state, and that clearing selected rows removes the current university selection. If these behaviors break, users could see an incomplete dashboard table, get stuck in a filtered state, or continue seeing stale specific comparisons after trying to clear their selection.
 - The first two lectures introducing Shiny dashboards were the most interesting for me. I found those gave me a good reference point. The lecture on lazy loading was also helpful. In future I would reduce LLM to one week at the end and cover additional dashboard features. @beardw
 
 ## [0.3.0] - 2026-03-08
@@ -107,8 +111,6 @@ our user stories where they may want to only select a subset of universities and
 ### [0.3.0] Reflection
 
 The dashboard now does a better job supporting exploration and direct comparison. Users can filter the data, compare one or more universities, and interpret results against a recent global benchmark. Current limitations come from the data set itself, including limited university coverage and uneven year availability.
-
-
 
 ## [v0.2.0] - 2026-02-28
 
