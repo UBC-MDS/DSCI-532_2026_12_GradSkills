@@ -71,6 +71,45 @@ shiny run src/app.py
 
 Shiny will print a local URL in the terminal, typically **<http://127.0.0.1:8000>**. Open it in your browser.
 
+### Running tests
+
+This project includes:
+
+- Unit tests for the refactored `compute_top_universities()` function
+- Playwright tests for core dashboard behaviors
+
+Before running the tests for the first time, install Playwright browsers once:
+
+```bash
+python -m playwright install
+```
+
+Then, from the repository root, run all tests with a single command:
+
+```bash
+pytest
+```
+
+Or if you wish to see the `playwright` tests as they are performed on a browser, run:
+
+```bash
+pytest --headed
+```
+
+### What the tests cover
+
+The unit tests verify that:
+
+- University rows are aggregated correctly before ranking
+- Universities are ranked by descending overall employment mean
+- Empty inputs return a valid empty result
+
+The Playwright tests verify that:
+
+- The university ranking table renders with the expected columns
+- The reset button restores the default filter state
+- Clearing selected rows removes the current university selection
+
 **For more details, refer to [CONTRIBUTING.md](CONTRIBUTING.md)**
 
 ### Main Contributors

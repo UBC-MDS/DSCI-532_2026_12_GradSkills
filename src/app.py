@@ -17,12 +17,16 @@ import pandas as pd
 
 # Shiny-related imports
 from shiny import App, render, ui, reactive, req
-from shinywidgets import render_altair, render_widget, output_widget
+from shinywidgets import render_altair, output_widget
+
+# Other files
 
 try:
     from .ai_tab import ai_tab_ui, ai_tab_server  # Posit deployment
+    from .logic import compute_top_universities
 except ImportError:
     from ai_tab import ai_tab_ui, ai_tab_server  # To run code locally
+    from logic import compute_top_universities
 
 
 load_dotenv(Path(__file__).parent.parent / ".env")
@@ -34,7 +38,7 @@ duckdb.execute(
     f"""
     COPY (SELECT * FROM read_csv_auto('{CSV}'))
     TO '{OUT}' (FORMAT PARQUET)
-"""
+    """
 )
 
 con = ibis.duckdb.connect()
@@ -72,7 +76,7 @@ def render_metric_card(
     unit_prefix="",
     unit_suffix="",
     threshold_pct=1.0,
-    comparison_label="Global Last 5 Years",
+    comparison_label="Global 2025",
     font_scale=0.75,
     spacing_scale=0.72,  # controls padding / margins / gaps
 ):
@@ -188,13 +192,13 @@ def render_metric_card(
     """
 
 
-# preprocess baseline metrics
+# Preprocess baseline metrics
 
 last_year = raw_data.Graduation_Year.max().execute()
 min_year = raw_data.Graduation_Year.min().execute()
 max_year = raw_data.Graduation_Year.max().execute()
 
-baseline_data = raw_data.filter(_.Graduation_Year > last_year - 5)
+baseline_data = raw_data.filter(_.Graduation_Year == last_year)
 
 emp_6_baseline = baseline_data["Employment_Rate_6_Months (%)"].mean().execute()
 emp_12_baseline = baseline_data["Employment_Rate_12_Months (%)"].mean().execute()
@@ -397,7 +401,7 @@ def server(input, output, session):
             .mark_bar()
             .encode(
                 x=alt.X("University_Name", title=""),
-                y=alt.Y("avg_col" + col_style, title=""),
+                y=alt.Y("avg_col" + col_style, title="", axis=alt.Axis(format=col_format)),
                 color=alt.Color("University_Name", legend=None),
                 tooltip=[
                     alt.Tooltip("University_Name", title="University"),
@@ -540,37 +544,7 @@ def server(input, output, session):
 
     @reactive.calc
     def top_uni():
-        data = display_data()
-
-        uni_emp_summary: pd.DataFrame = data.groupby(
-            ["University_Name", "Region", "Country"], as_index=False
-        ).agg(
-            mean_6=("Employment_Rate_6_Months (%)", "mean"),
-            mean_12=("Employment_Rate_12_Months (%)", "mean"),
-        )
-
-        uni_emp_summary["mean_overall"] = uni_emp_summary[["mean_6", "mean_12"]].mean(
-            axis=1
-        )
-
-        uni_emp_summary["rank"] = (
-            uni_emp_summary["mean_overall"]
-            .rank(method="dense", ascending=False)
-            .astype(int)
-        )
-
-        top_uni = pd.DataFrame(
-            uni_emp_summary.sort_values(
-                ["mean_overall", "University_Name"], ascending=[False, True]
-            ).copy()
-        )
-
-        ordered_unis = top_uni["University_Name"].tolist()
-
-        top_uni = (
-            top_uni.set_index("University_Name").reindex(ordered_unis).reset_index()
-        )
-        return top_uni[["rank", "University_Name", "mean_overall"]]
+        return compute_top_universities(display_data())
 
     @reactive.calc
     def filter_data_by_university():

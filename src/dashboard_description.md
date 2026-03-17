@@ -13,6 +13,7 @@ This dashboard contains data from the "Global Graduate Skills & Employability In
 ## Clarifications and Limitations for this data set
 
 - It is based on the **2015 - 2025** cohorts from some of the top universities in the Bachelors, Masters and PhD levels.
+- The deafult comparison is with the global indicators for **2025**.
 - The list is limited to 46 different universities.
 - A university may show up only on specific, non-consecutive years, based on their employability and salary rankings.
 - **Top Industry** is bounded by the **Field of Study**, as it only shows the most relevant one for all cases.
